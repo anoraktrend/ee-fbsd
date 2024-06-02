@@ -1,7 +1,7 @@
 Hi! this is the freebsd version of EE with an additional rust conversion.
 To install the rust version, simply run:
 
-``cargo install --git https://github.com/anoraktrend/ee-fbsd ee-rust``
+``cargo +nightly install --git https://github.com/anoraktrend/ee-fbsd ee-rust``
 
 or
 
