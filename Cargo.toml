@@ -1,0 +1,21 @@
+[workspace]
+members = [
+]
+[package]
+name = "ee-rust"
+authors = ["Hugh Mahon, Lucy Randall, C2Rust"]
+version = "0.0.0"
+publish = false
+edition = "2021"
+autobins = false
+
+[lib]
+name = "c2rust_out"
+path = "c2rust-lib.rs"
+crate-type = ["staticlib", "rlib"]
+[[bin]]
+path = "ee.rs"
+name = "ee"
+[dependencies]
+libc= "0.2"
+ncurses = "6.0.0"
