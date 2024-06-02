@@ -4,14 +4,14 @@ members = [
 [package]
 name = "ee-rust"
 authors = ["Hugh Mahon, Lucy Randall, C2Rust"]
-version = "0.0.0"
+version = "1.0.0"
 publish = false
 edition = "2021"
 autobins = false
 
 [lib]
-name = "c2rust_out"
-path = "c2rust-lib.rs"
+name = "ee_lib"
+path = "ee-lib.rs"
 crate-type = ["staticlib", "rlib"]
 [[bin]]
 path = "ee.rs"
