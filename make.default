@@ -19,13 +19,13 @@
 #
 
 # for System V, using new_curse with terminfo
-DEFINES =	-DSYS5 -DNCURSE 
+#DEFINES =	-DSYS5 -DNCURSE 
 
 # for BSD, using new_curse with termcap
 #DEFINES = 	-DCAP -DNCURSE 
 
 # for BSD systems with select(), using new_curse with termcap, use:
-#DEFINES =      -DCAP -DNCURSE -DBSD_SELECT 
+DEFINES =      -DCAP -DNCURSE -DBSD_SELECT 
 
 # flags for compilation
 CFLAGS = -s -DNO_CATGETS
