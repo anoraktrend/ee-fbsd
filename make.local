@@ -6,7 +6,7 @@ CFLAGS =	-DHAS_UNISTD  -DHAS_STDLIB -DHAS_CTYPE -DHAS_SYS_IOCTL -DHAS_SYS_WAIT  
 all :	ee
 
 ee :	ee.c
-	cc ee.c -o ee $(CFLAGS) -DCAP -BSD_SELECT -lcurses 
+	cc ee.c -o ee $(CFLAGS) -DCAP -BSD_SELECT -lncursesew 
 
 new_curse :	ee.o new_curse.o
 	cc -o ee ee.o new_curse.o $(CFLAGS) 
