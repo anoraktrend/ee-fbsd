@@ -267,7 +267,7 @@ echo "all :	$TARGET" >> make.local
 cat  >> make.local << EOF
 
 ee :	ee.c
-	cc ee.c -o ee \$(CFLAGS) -lcurses 
+	cc ee.c -o ee \$(CFLAGS) -lncursesw 
 
 new_curse :	ee.o new_curse.o
 	cc -o ee ee.o new_curse.o \$(CFLAGS) 
