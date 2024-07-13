@@ -21,8 +21,8 @@ localmake:
 	@./create.make
 
 install :
-	install -dm755 ee $(DESTDIR)/usr/bin/ee
-	install -dm644 ee.1 $(DESTDIR)/usr/share/man/man1/ee.1
+	install -Dm755 ee $(DESTDIR)/usr/bin/ee
+	install -Dm644 ee.1 $(DESTDIR)/usr/share/man/man1/ee.1
 
 clean :
 	rm -f ee.o new_curse.o ee 
