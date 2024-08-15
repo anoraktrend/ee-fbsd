@@ -1,0 +1,1142 @@
+ee.c:548:3: warning: Call to function 'fprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+  548 |                 fprintf(stderr,
+      |                 ^~~~~~~
+ee.c:548:3: note: Call to function 'fprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+  548 |                 fprintf(stderr,
+      |                 ^~~~~~~
+ee.c:606:2: warning: Value stored to 'counter' is never read [clang-analyzer-deadcode.DeadStores]
+  606 |         counter = 0;
+      |         ^         ~
+ee.c:606:2: note: Value stored to 'counter' is never read
+  606 |         counter = 0;
+      |         ^         ~
+ee.c:954:4: warning: Call to function 'sprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+  954 |                         sprintf(string2, "<%d>", (character < 0) ? (character + 256) : character);
+      |                         ^~~~~~~
+ee.c:954:4: note: Call to function 'sprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+  954 |                         sprintf(string2, "<%d>", (character < 0) ? (character + 256) : character);
+      |                         ^~~~~~~
+ee.c:1010:2: warning: Value stored to 'd' is never read [clang-analyzer-deadcode.DeadStores]
+ 1010 |         d = 0;
+      |         ^   ~
+ee.c:1010:2: note: Value stored to 'd' is never read
+ 1010 |         d = 0;
+      |         ^   ~
+ee.c:1647:2: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 1647 |         sprintf(buffer, ">!%s", print_command);
+      |         ^~~~~~~
+ee.c:1647:2: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 1647 |         sprintf(buffer, ">!%s", print_command);
+      |         ^~~~~~~
+ee.c:1707:11: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1707 |                 cmd_str = next_word(cmd_str);
+      |                         ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1707:23: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1707 |                 cmd_str = next_word(cmd_str);
+      |                                     ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1723:11: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1723 |                 cmd_str = next_word(cmd_str);
+      |                         ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1723:23: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1723 |                 cmd_str = next_word(cmd_str);
+      |                                     ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1812:12: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1812 |                         cmd_str = next_word(cmd_str);
+      |                                 ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1812:24: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1812 |                         cmd_str = next_word(cmd_str);
+      |                                             ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1821:12: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1821 |                         cmd_str = next_word(cmd_str);
+      |                                 ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1821:24: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1821 |                         cmd_str = next_word(cmd_str);
+      |                                             ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1831:12: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1831 |                         cmd_str = next_word(cmd_str);
+      |                                 ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1831:24: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1831 |                         cmd_str = next_word(cmd_str);
+      |                                             ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1937:11: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1937 |                 nam_str = next_word(nam_str);
+      |                         ^ ~~~~~~~~~~~~~~~~~~
+ee.c:1937:23: warning: passing 'char *' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 1937 |                 nam_str = next_word(nam_str);
+      |                                     ^~~~~~~
+ee.c:1141:26: note: passing argument to parameter 'string' here
+ 1141 | next_word(unsigned char *string)
+      |                          ^
+ee.c:1939:2: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 1939 |         strcpy(string, nam_str);
+      |         ^~~~~~
+ee.c:1939:2: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 1939 |         strcpy(string, nam_str);
+      |         ^~~~~~
+ee.c:2098:4: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 2098 |                         fprintf(stderr, usage0, arguments[0]);
+      |                         ^~~~~~~
+ee.c:2098:4: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 2098 |                         fprintf(stderr, usage0, arguments[0]);
+      |                         ^~~~~~~
+ee.c:2108:18: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2108 |                         start_at_line = buff;
+      |                                       ^ ~~~~
+ee.c:2131:7: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2131 |                 ptr = temp_names->name = malloc(strlen(buff) + 1);
+      |                     ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:2160:16: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2160 |                 in_file_name = tmp_file = top_of_stack->name;
+      |                              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:2160:27: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2160 |                 in_file_name = tmp_file = top_of_stack->name;
+      |                                         ^ ~~~~~~~~~~~~~~~~~~
+ee.c:2196:2: warning: Value stored to 'line_num' is never read [clang-analyzer-deadcode.DeadStores]
+ 2196 |         line_num = curr_line->line_number;
+      |         ^          ~~~~~~~~~~~~~~~~~~~~~~
+ee.c:2196:2: note: Value stored to 'line_num' is never read
+ 2196 |         line_num = curr_line->line_number;
+      |         ^          ~~~~~~~~~~~~~~~~~~~~~~
+ee.c:2210:20: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2210 |                         line_num = atoi(start_at_line) - 1;
+      |                                         ^~~~~~~~~~~~~
+/usr/include/stdlib.h:23:23: note: passing argument to parameter here
+   23 | int atoi (const char *);
+      |                       ^
+ee.c:2212:4: warning: Value stored to 'line_num' is never read [clang-analyzer-deadcode.DeadStores]
+ 2212 |                         line_num = 0;
+      |                         ^          ~
+ee.c:2212:4: note: Value stored to 'line_num' is never read
+ 2212 |                         line_num = 0;
+      |                         ^          ~
+ee.c:2266:20: warning: passing 'char[513]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2266 |                 get_line(length, in_string, &append);
+      |                                  ^~~~~~~~~
+ee.c:284:42: note: passing argument to parameter 'in_string' here
+  284 | void get_line(int length, unsigned char *in_string, int *append);
+      |                                          ^
+ee.c:2390:8: warning: initializing 'char *' with an expression of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2390 |         char *file_name = in_file_name;
+      |               ^           ~~~~~~~~~~~~
+ee.c:2504:40: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2504 |             ((in_file_name == NULL) || strcmp(in_file_name, file_name)))
+      |                                               ^~~~~~~~~~~~
+/usr/include/string.h:39:25: note: passing argument to parameter here
+   39 | int strcmp (const char *, const char *);
+      |                         ^
+ee.c:2542:14: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2542 |                                 tmp_point= out_line->line;
+      |                                          ^ ~~~~~~~~~~~~~~
+ee.c:2688:11: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2688 |         srch_str = get_string(search_prompt_str, FALSE);
+      |                  ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:2691:38: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2691 |         srch_1 = u_srch_str = malloc(strlen(srch_str) + 1);
+      |                                             ^~~~~~~~
+/usr/include/string.h:54:28: note: passing argument to parameter here
+   54 | size_t strlen (const char *);
+      |                            ^
+ee.c:2954:8: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2954 |                         tmp = point;
+      |                             ^ ~~~~~
+ee.c:2963:10: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2963 |                         point = tmp;
+      |                               ^ ~~~
+ee.c:2987:8: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2987 |                         tmp = point;
+      |                             ^ ~~~~~
+ee.c:2996:10: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 2996 |                         point = tmp;
+      |                               ^ ~~~
+ee.c:3199:4: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 3199 |                         fprintf(stderr, exec_err_msg, path);
+      |                         ^~~~~~~
+ee.c:3199:4: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 3199 |                         fprintf(stderr, exec_err_msg, path);
+      |                         ^~~~~~~
+ee.c:3443:13: warning: The left operand of '<=' is a garbage value [clang-analyzer-core.UndefinedBinaryOperatorResult]
+ 3443 |                         if (temp <= list_size)
+      |                             ~~~~ ^
+ee.c:3347:2: note: 'temp' declared without an initial value
+ 3347 |         int temp;
+      |         ^~~~~~~~
+ee.c:3359:9: note: Assuming field 'item_string' is equal to NULL
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3359:2: note: Loop condition is false. Execution continues on line 3361
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |         ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is false. Execution continues on line 3367
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3368:18: note: Assuming the condition is true
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3368:18: note: '?' condition is true
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:3369:33: note: Assuming the condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^
+ee.c:111:24: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                              ^
+ee.c:3369:33: note: '?' condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:3369:18: note: Assuming the condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3369:18: note: '?' condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:3377:6: note: Assuming 'max_width' is <= 'COLS'
+ 3377 |         if (max_width > COLS)
+      |             ^~~~~~~~~~~~~~~~
+ee.c:3377:2: note: Taking false branch
+ 3377 |         if (max_width > COLS)
+      |         ^
+ee.c:3389:6: note: Assuming 'list_size' is <= 'LINES'
+ 3389 |         if (list_size > LINES)
+      |             ^~~~~~~~~~~~~~~~~
+ee.c:3389:2: note: Taking false branch
+ 3389 |         if (list_size > LINES)
+      |         ^
+ee.c:3403:6: note: Assuming the condition is false
+ 3403 |         if (LINES >= (vert_size + 8))
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3403:2: note: Taking false branch
+ 3403 |         if (LINES >= (vert_size + 8))
+      |         ^
+ee.c:3421:7: note: 'off_start' is <= 2
+ 3421 |                 if (off_start > 2)
+      |                     ^~~~~~~~~
+ee.c:3421:3: note: Taking false branch
+ 3421 |                 if (off_start > 2)
+      |                 ^
+ee.c:3429:7: note: Assuming the condition is false
+ 3429 |                 if (input == -1)
+      |                     ^~~~~~~~~~~
+ee.c:3429:3: note: Taking false branch
+ 3429 |                 if (input == -1)
+      |                 ^
+ee.c:3432:7: note: '?' condition is false
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:21: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                     ^
+ee.c:3432:7: note: Assuming 'input' is < 128
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:38: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                                      ^~~~~~~~~~~~~~~~~~~
+ee.c:3432:7: note: Left side of '&&' is true
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:20: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                    ^
+ee.c:3432:3: note: Taking true branch
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                 ^
+ee.c:3434:8: note: '?' condition is false
+ 3434 |                         if (isalpha(input))
+      |                             ^
+/usr/include/ctype.h:31:21: note: expanded from macro 'isalpha'
+   31 | #define isalpha(a) (0 ? isalpha(a) : (((unsigned)(a)|32)-'a') < 26)
+      |                     ^
+ee.c:3434:8: note: Assuming the condition is false
+ 3434 |                         if (isalpha(input))
+      |                             ^
+/usr/include/ctype.h:31:38: note: expanded from macro 'isalpha'
+   31 | #define isalpha(a) (0 ? isalpha(a) : (((unsigned)(a)|32)-'a') < 26)
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3434:4: note: Taking false branch
+ 3434 |                         if (isalpha(input))
+      |                         ^
+ee.c:3438:13: note: '?' condition is false
+ 3438 |                         else if (isdigit(input))
+      |                                  ^
+/usr/include/ctype.h:32:21: note: expanded from macro 'isdigit'
+   32 | #define isdigit(a) (0 ? isdigit(a) : ((unsigned)(a)-'0') < 10)
+      |                     ^
+ee.c:3438:13: note: Assuming the condition is false
+ 3438 |                         else if (isdigit(input))
+      |                                  ^
+/usr/include/ctype.h:32:38: note: expanded from macro 'isdigit'
+   32 | #define isdigit(a) (0 ? isdigit(a) : ((unsigned)(a)-'0') < 10)
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3438:9: note: Taking false branch
+ 3438 |                         else if (isdigit(input))
+      |                              ^
+ee.c:3443:13: note: The left operand of '<=' is a garbage value
+ 3443 |                         if (temp <= list_size)
+      |                             ~~~~ ^
+ee.c:3536:4: warning: Called function pointer is null (null dereference) [clang-analyzer-core.CallAndMessage]
+ 3536 |                         (*menu_list[counter].iprocedure)(menu_list[counter].argument);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3359:9: note: Assuming field 'item_string' is equal to NULL
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3359:2: note: Loop condition is false. Execution continues on line 3361
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |         ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is false. Execution continues on line 3367
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3368:18: note: Assuming the condition is false
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3368:18: note: '?' condition is false
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:3369:33: note: Assuming the condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^
+ee.c:111:24: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                              ^
+ee.c:3369:33: note: '?' condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:3369:18: note: Assuming the condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3369:18: note: '?' condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:3377:6: note: Assuming 'max_width' is <= 'COLS'
+ 3377 |         if (max_width > COLS)
+      |             ^~~~~~~~~~~~~~~~
+ee.c:3377:2: note: Taking false branch
+ 3377 |         if (max_width > COLS)
+      |         ^
+ee.c:3389:6: note: Assuming 'list_size' is <= 'LINES'
+ 3389 |         if (list_size > LINES)
+      |             ^~~~~~~~~~~~~~~~~
+ee.c:3389:2: note: Taking false branch
+ 3389 |         if (list_size > LINES)
+      |         ^
+ee.c:3403:6: note: Assuming the condition is false
+ 3403 |         if (LINES >= (vert_size + 8))
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3403:2: note: Taking false branch
+ 3403 |         if (LINES >= (vert_size + 8))
+      |         ^
+ee.c:3421:7: note: 'off_start' is <= 2
+ 3421 |                 if (off_start > 2)
+      |                     ^~~~~~~~~
+ee.c:3421:3: note: Taking false branch
+ 3421 |                 if (off_start > 2)
+      |                 ^
+ee.c:3429:7: note: Assuming the condition is false
+ 3429 |                 if (input == -1)
+      |                     ^~~~~~~~~~~
+ee.c:3429:3: note: Taking false branch
+ 3429 |                 if (input == -1)
+      |                 ^
+ee.c:3432:7: note: '?' condition is false
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:21: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                     ^
+ee.c:3432:7: note: Assuming 'input' is < 128
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:38: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                                      ^~~~~~~~~~~~~~~~~~~
+ee.c:3432:7: note: Left side of '&&' is true
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:20: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                    ^
+ee.c:3432:3: note: Taking false branch
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                 ^
+ee.c:3451:4: note: Control jumps to the 'default' case at line 3481
+ 3451 |                         switch (input)
+      |                         ^
+ee.c:3482:6: note:  Execution continues on line 3486
+ 3482 |                                         break;
+      |                                         ^
+ee.c:3486:7: note: Left side of '&&' is true
+ 3486 |                 if (((list_size - off_start) >= (vert_size - 1)) && 
+      |                     ^
+ee.c:3486:7: note: Left side of '&&' is true
+ee.c:3488:6: note: 'off_start' is <= 1
+ 3488 |                                 (off_start > 1))
+      |                                  ^~~~~~~~~
+ee.c:3486:3: note: Taking false branch
+ 3486 |                 if (((list_size - off_start) >= (vert_size - 1)) && 
+      |                 ^
+ee.c:3499:13: note: 'list_size' is equal to 'vert_size'
+ 3499 |                 else if ((list_size != vert_size) && 
+      |                           ^~~~~~~~~
+ee.c:3499:37: note: Left side of '&&' is false
+ 3499 |                 else if ((list_size != vert_size) && 
+      |                                                   ^
+ee.c:3513:12: note: 'counter' is >= 'off_start'
+ 3513 |                 else if (counter < off_start)
+      |                          ^~~~~~~
+ee.c:3513:8: note: Taking false branch
+ 3513 |                 else if (counter < off_start)
+      |                      ^
+ee.c:3525:10: note: Assuming the condition is false
+ 3525 |         while ((input != '\r') && (input != '\n') && (counter != 0));
+      |                 ^~~~~~~~~~~~~
+ee.c:3525:25: note: Left side of '&&' is false
+ 3525 |         while ((input != '\r') && (input != '\n') && (counter != 0));
+      |                                ^
+ee.c:3419:2: note: Loop condition is false.  Exiting loop
+ 3419 |         do
+      |         ^
+ee.c:3531:7: note: Assuming field 'procedure' is equal to NULL
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3531:6: note: Left side of '||' is false
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |             ^
+ee.c:3532:7: note: Assuming field 'iprocedure' is equal to NULL
+ 3532 |             (menu_list[counter].iprocedure != NULL) || 
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3531:6: note: Left side of '||' is false
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |             ^
+ee.c:3533:7: note: Assuming field 'nprocedure' is not equal to NULL
+ 3533 |             (menu_list[counter].nprocedure != NULL))
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3531:2: note: Taking true branch
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |         ^
+ee.c:3535:7: note: Assuming the condition is true
+ 3535 |                 if (menu_list[counter].argument != -1)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3535:3: note: Taking true branch
+ 3535 |                 if (menu_list[counter].argument != -1)
+      |                 ^
+ee.c:3536:4: note: Called function pointer is null (null dereference)
+ 3536 |                         (*menu_list[counter].iprocedure)(menu_list[counter].argument);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3538:4: warning: Called function pointer is null (null dereference) [clang-analyzer-core.CallAndMessage]
+ 3538 |                         (*menu_list[counter].procedure)(menu_list[counter].ptr_argument);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3359:9: note: Assuming field 'item_string' is equal to NULL
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3359:2: note: Loop condition is false. Execution continues on line 3361
+ 3359 |         while (menu_list[list_size + 1].item_string != NULL)
+      |         ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is true.  Entering loop body
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3364:7: note: Assuming the condition is false
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3364:3: note: Taking false branch
+ 3364 |                 if ((length = strlen(menu_list[counter].item_string)) > max_width)
+      |                 ^
+ee.c:3362:2: note: Loop condition is false. Execution continues on line 3367
+ 3362 |         for (counter = 0; counter <= list_size; counter++)
+      |         ^
+ee.c:3368:18: note: Assuming the condition is false
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3368:18: note: '?' condition is false
+ 3368 |         max_width = max(max_width, strlen(menu_cancel_msg));
+      |                         ^
+ee.c:3369:33: note: Assuming the condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^
+ee.c:111:24: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                              ^
+ee.c:3369:33: note: '?' condition is false
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                                        ^
+ee.c:3369:18: note: Assuming the condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:111:20: note: expanded from macro 'max'
+  111 | #define max(a, b)       (a > b ? a : b)
+      |                          ^~~~~
+ee.c:3369:18: note: '?' condition is true
+ 3369 |         max_width = max(max_width, max(strlen(more_above_str), strlen(more_below_str)));
+      |                         ^
+ee.c:3377:6: note: Assuming 'max_width' is <= 'COLS'
+ 3377 |         if (max_width > COLS)
+      |             ^~~~~~~~~~~~~~~~
+ee.c:3377:2: note: Taking false branch
+ 3377 |         if (max_width > COLS)
+      |         ^
+ee.c:3389:6: note: Assuming 'list_size' is <= 'LINES'
+ 3389 |         if (list_size > LINES)
+      |             ^~~~~~~~~~~~~~~~~
+ee.c:3389:2: note: Taking false branch
+ 3389 |         if (list_size > LINES)
+      |         ^
+ee.c:3403:6: note: Assuming the condition is false
+ 3403 |         if (LINES >= (vert_size + 8))
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3403:2: note: Taking false branch
+ 3403 |         if (LINES >= (vert_size + 8))
+      |         ^
+ee.c:3421:7: note: 'off_start' is <= 2
+ 3421 |                 if (off_start > 2)
+      |                     ^~~~~~~~~
+ee.c:3421:3: note: Taking false branch
+ 3421 |                 if (off_start > 2)
+      |                 ^
+ee.c:3429:7: note: Assuming the condition is false
+ 3429 |                 if (input == -1)
+      |                     ^~~~~~~~~~~
+ee.c:3429:3: note: Taking false branch
+ 3429 |                 if (input == -1)
+      |                 ^
+ee.c:3432:7: note: '?' condition is false
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:21: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                     ^
+ee.c:3432:7: note: Assuming 'input' is < 128
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:38: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                                      ^~~~~~~~~~~~~~~~~~~
+ee.c:3432:7: note: Left side of '&&' is true
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                     ^
+/usr/include/ctype.h:68:20: note: expanded from macro 'isascii'
+   68 | #define isascii(a) (0 ? isascii(a) : (unsigned)(a) < 128)
+      |                    ^
+ee.c:3432:3: note: Taking false branch
+ 3432 |                 if (isascii(input) && isalnum(input))
+      |                 ^
+ee.c:3451:4: note: Control jumps to the 'default' case at line 3481
+ 3451 |                         switch (input)
+      |                         ^
+ee.c:3482:6: note:  Execution continues on line 3486
+ 3482 |                                         break;
+      |                                         ^
+ee.c:3486:7: note: Left side of '&&' is true
+ 3486 |                 if (((list_size - off_start) >= (vert_size - 1)) && 
+      |                     ^
+ee.c:3486:7: note: Left side of '&&' is true
+ee.c:3488:6: note: 'off_start' is <= 1
+ 3488 |                                 (off_start > 1))
+      |                                  ^~~~~~~~~
+ee.c:3486:3: note: Taking false branch
+ 3486 |                 if (((list_size - off_start) >= (vert_size - 1)) && 
+      |                 ^
+ee.c:3499:13: note: 'list_size' is equal to 'vert_size'
+ 3499 |                 else if ((list_size != vert_size) && 
+      |                           ^~~~~~~~~
+ee.c:3499:37: note: Left side of '&&' is false
+ 3499 |                 else if ((list_size != vert_size) && 
+      |                                                   ^
+ee.c:3513:12: note: 'counter' is >= 'off_start'
+ 3513 |                 else if (counter < off_start)
+      |                          ^~~~~~~
+ee.c:3513:8: note: Taking false branch
+ 3513 |                 else if (counter < off_start)
+      |                      ^
+ee.c:3525:10: note: Assuming the condition is false
+ 3525 |         while ((input != '\r') && (input != '\n') && (counter != 0));
+      |                 ^~~~~~~~~~~~~
+ee.c:3525:25: note: Left side of '&&' is false
+ 3525 |         while ((input != '\r') && (input != '\n') && (counter != 0));
+      |                                ^
+ee.c:3419:2: note: Loop condition is false.  Exiting loop
+ 3419 |         do
+      |         ^
+ee.c:3531:7: note: Assuming field 'procedure' is equal to NULL
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3531:6: note: Left side of '||' is false
+ 3531 |         if ((menu_list[counter].procedure != NULL) || 
+      |             ^
+ee.c:3532:7: note: Assuming field 'iprocedure' is not equal to NULL
+ 3532 |             (menu_list[counter].iprocedure != NULL) || 
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3532:46: note: Left side of '||' is true
+ 3532 |             (menu_list[counter].iprocedure != NULL) || 
+      |                                                     ^
+ee.c:3535:7: note: Assuming the condition is false
+ 3535 |                 if (menu_list[counter].argument != -1)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3535:3: note: Taking false branch
+ 3535 |                 if (menu_list[counter].argument != -1)
+      |                 ^
+ee.c:3537:12: note: Assuming field 'ptr_argument' is not equal to NULL
+ 3537 |                 else if (menu_list[counter].ptr_argument != NULL)
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3537:8: note: Taking true branch
+ 3537 |                 else if (menu_list[counter].ptr_argument != NULL)
+      |                      ^
+ee.c:3538:4: note: Called function pointer is null (null dereference)
+ 3538 |                         (*menu_list[counter].procedure)(menu_list[counter].ptr_argument);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:3787:10: warning: assigning to 'char *' from 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 3787 |                 string = in_file_name;
+      |                        ^ ~~~~~~~~~~~~
+ee.c:3810:17: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 3810 |                         in_file_name = string;
+      |                                      ^ ~~~~~~
+ee.c:4118:2: warning: initializing 'unsigned char *' with an expression of type 'char[24]' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4118 |         "/usr/share/misc/init.ee", 
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4120:2: warning: initializing 'unsigned char *' with an expression of type 'char[9]' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4120 |         ".init.ee"
+      |         ^~~~~~~~~~
+ee.c:4135:9: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4135 |         string = getenv("HOME");
+      |                ^ ~~~~~~~~~~~~~~
+ee.c:4137:10: warning: assigning to 'unsigned char *' from 'char[5]' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4137 |                 string = "/tmp";
+      |                        ^ ~~~~~~
+ee.c:4138:2: warning: Value stored to 'str1' is never read [clang-analyzer-deadcode.DeadStores]
+ 4138 |         str1 = home = malloc(strlen(string)+10);
+      |         ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4138:2: note: Value stored to 'str1' is never read
+ 4138 |         str1 = home = malloc(strlen(string)+10);
+      |         ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4138:7: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4138 |         str1 = home = malloc(strlen(string)+10);
+      |              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4138:30: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4138 |         str1 = home = malloc(strlen(string)+10);
+      |                                     ^~~~~~
+/usr/include/string.h:54:28: note: passing argument to parameter here
+   54 | size_t strlen (const char *);
+      |                            ^
+ee.c:4139:2: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4139 |         strcpy(home, string);
+      |         ^~~~~~
+ee.c:4139:2: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 4139 |         strcpy(home, string);
+      |         ^~~~~~
+ee.c:4139:15: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4139 |         strcpy(home, string);
+      |                      ^~~~~~
+/usr/include/string.h:33:55: note: passing argument to parameter here
+   33 | char *strcpy (char *__restrict, const char *__restrict);
+      |                                                       ^
+ee.c:4140:2: warning: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4140 |         strcat(home, "/.init.ee");
+      |         ^~~~~~
+ee.c:4140:2: note: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119
+ 4140 |         strcat(home, "/.init.ee");
+      |         ^~~~~~
+ee.c:4141:15: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4141 |         init_name[1] = home;
+      |                      ^ ~~~~
+ee.c:4146:16: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4146 |                 if (!(access(init_name[counter], 4)))
+      |                              ^~~~~~~~~~~~~~~~~~
+/usr/include/unistd.h:77:24: note: passing argument to parameter here
+   77 | int access(const char *, int);
+      |                        ^
+ee.c:4148:22: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4148 |                         init_file = fopen(init_name[counter], "r");
+      |                                           ^~~~~~~~~~~~~~~~~~
+/usr/include/stdio.h:70:35: note: passing argument to parameter here
+   70 | FILE *fopen(const char *__restrict, const char *__restrict);
+      |                                   ^
+ee.c:4149:12: warning: Although the value stored to 'str2' is used in the enclosing expression, the value is never actually read from 'str2' [clang-analyzer-deadcode.DeadStores]
+ 4149 |                         while ((str2 = fgets(string, 512, init_file)) != NULL)
+      |                                 ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4149:12: note: Although the value stored to 'str2' is used in the enclosing expression, the value is never actually read from 'str2'
+ 4149 |                         while ((str2 = fgets(string, 512, init_file)) != NULL)
+      |                                 ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4149:17: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4149 |                         while ((str2 = fgets(string, 512, init_file)) != NULL)
+      |                                      ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee.c:4149:25: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4149 |                         while ((str2 = fgets(string, 512, init_file)) != NULL)
+      |                                              ^~~~~~
+/usr/include/stdio.h:101:29: note: passing argument to parameter here
+  101 | char *fgets(char *__restrict, int, FILE *__restrict);
+      |                             ^
+ee.c:4156:21: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4156 |                                 if (unique_test(string, init_strings) != 1)
+      |                                                 ^~~~~~
+ee.c:330:23: note: passing argument to parameter 'string' here
+  330 | int unique_test(char *string, char *list[]);
+      |                       ^
+ee.c:4159:17: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4159 |                                 if (compare(str1, CASE, FALSE))
+      |                                             ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4161:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4161 |                                 else if (compare(str1, NOCASE, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4163:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4163 |                                 else if (compare(str1, EXPAND, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4165:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4165 |                                 else if (compare(str1, NOEXPAND, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4167:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4167 |                                 else if (compare(str1, INFO, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4169:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4169 |                                 else if (compare(str1, NOINFO, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4171:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4171 |                                 else if (compare(str1, MARGINS, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4173:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4173 |                                 else if (compare(str1, NOMARGINS, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4175:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4175 |                                 else if (compare(str1, AUTOFORMAT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4180:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4180 |                                 else if (compare(str1, NOAUTOFORMAT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4182:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4182 |                                 else if (compare(str1, Echo, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4186:19: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4186 |                                                 echo_string(str1);
+      |                                                             ^~~~
+ee.c:321:24: note: passing argument to parameter 'string' here
+  321 | void echo_string(char *string);
+      |                        ^
+ee.c:4188:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4188 |                                 else if (compare(str1, PRINTCOMMAND, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4191:36: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4191 |                                         print_command = malloc(strlen(str1)+1);
+      |                                                                       ^~~~
+/usr/include/string.h:54:28: note: passing argument to parameter here
+   54 | size_t strlen (const char *);
+      |                            ^
+ee.c:4192:6: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4192 |                                         strcpy(print_command, str1);
+      |                                         ^~~~~~
+ee.c:4192:6: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 4192 |                                         strcpy(print_command, str1);
+      |                                         ^~~~~~
+ee.c:4192:13: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4192 |                                         strcpy(print_command, str1);
+      |                                                ^~~~~~~~~~~~~
+/usr/include/string.h:33:31: note: passing argument to parameter here
+   33 | char *strcpy (char *__restrict, const char *__restrict);
+      |                               ^
+ee.c:4192:28: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4192 |                                         strcpy(print_command, str1);
+      |                                                               ^~~~
+/usr/include/string.h:33:55: note: passing argument to parameter here
+   33 | char *strcpy (char *__restrict, const char *__restrict);
+      |                                                       ^
+ee.c:4194:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4194 |                                 else if (compare(str1, RIGHTMARGIN, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4199:23: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4199 |                                                 temp_int = atoi(str1);
+      |                                                                 ^~~~
+/usr/include/stdlib.h:23:23: note: passing argument to parameter here
+   23 | int atoi (const char *);
+      |                       ^
+ee.c:4204:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4204 |                                 else if (compare(str1, HIGHLIGHT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4206:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4206 |                                 else if (compare(str1, NOHIGHLIGHT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4208:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4208 |                                 else if (compare(str1, EIGHTBIT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4210:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4210 |                                 else if (compare(str1, NOEIGHTBIT, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4215:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4215 |                                 else if (compare(str1, EMACS_string, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4217:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4217 |                                 else if (compare(str1, NOEMACS_string, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4219:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4219 |                                 else if (compare(str1, chinese_cmd, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4224:22: warning: passing 'unsigned char *' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4224 |                                 else if (compare(str1, nochinese_cmd, FALSE))
+      |                                                  ^~~~
+ee.c:1947:15: note: passing argument to parameter 'string1' here
+ 1947 | compare(char *string1, char *string2, int sensitive)
+      |               ^
+ee.c:4233:9: warning: assigning to 'unsigned char *' from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4233 |         string = getenv("LANG");
+      |                ^ ~~~~~~~~~~~~~~
+ee.c:4236:14: warning: passing 'unsigned char *' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [clang-diagnostic-pointer-sign]
+ 4236 |                 if (strcmp(string, "zh_TW.big5") == 0)
+      |                            ^~~~~~
+/usr/include/string.h:39:25: note: passing argument to parameter here
+   39 | int strcmp (const char *, const char *);
+      |                         ^
+ee.c:4286:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4286 |                 sprintf(buffer, "%s.old", file_name);
+      |                 ^~~~~~~
+ee.c:4286:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4286 |                 sprintf(buffer, "%s.old", file_name);
+      |                 ^~~~~~~
+ee.c:4315:6: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4315 |                                         fprintf(init_file, "%s\n", string);
+      |                                         ^~~~~~~
+ee.c:4315:6: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4315 |                                         fprintf(init_file, "%s\n", string);
+      |                                         ^~~~~~~
+ee.c:4319:5: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4319 |                                 fprintf(init_file, "%s\n", string);
+      |                                 ^~~~~~~
+ee.c:4319:5: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4319 |                                 fprintf(init_file, "%s\n", string);
+      |                                 ^~~~~~~
+ee.c:4325:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4325 |         fprintf(init_file, "%s\n", case_sen ? CASE : NOCASE);
+      |         ^~~~~~~
+ee.c:4325:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4325 |         fprintf(init_file, "%s\n", case_sen ? CASE : NOCASE);
+      |         ^~~~~~~
+ee.c:4326:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4326 |         fprintf(init_file, "%s\n", expand_tabs ? EXPAND : NOEXPAND);
+      |         ^~~~~~~
+ee.c:4326:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4326 |         fprintf(init_file, "%s\n", expand_tabs ? EXPAND : NOEXPAND);
+      |         ^~~~~~~
+ee.c:4327:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4327 |         fprintf(init_file, "%s\n", info_window ? INFO : NOINFO );
+      |         ^~~~~~~
+ee.c:4327:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4327 |         fprintf(init_file, "%s\n", info_window ? INFO : NOINFO );
+      |         ^~~~~~~
+ee.c:4328:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4328 |         fprintf(init_file, "%s\n", observ_margins ? MARGINS : NOMARGINS );
+      |         ^~~~~~~
+ee.c:4328:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4328 |         fprintf(init_file, "%s\n", observ_margins ? MARGINS : NOMARGINS );
+      |         ^~~~~~~
+ee.c:4329:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4329 |         fprintf(init_file, "%s\n", auto_format ? AUTOFORMAT : NOAUTOFORMAT );
+      |         ^~~~~~~
+ee.c:4329:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4329 |         fprintf(init_file, "%s\n", auto_format ? AUTOFORMAT : NOAUTOFORMAT );
+      |         ^~~~~~~
+ee.c:4330:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4330 |         fprintf(init_file, "%s %s\n", PRINTCOMMAND, print_command);
+      |         ^~~~~~~
+ee.c:4330:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4330 |         fprintf(init_file, "%s %s\n", PRINTCOMMAND, print_command);
+      |         ^~~~~~~
+ee.c:4331:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4331 |         fprintf(init_file, "%s %d\n", RIGHTMARGIN, right_margin);
+      |         ^~~~~~~
+ee.c:4331:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4331 |         fprintf(init_file, "%s %d\n", RIGHTMARGIN, right_margin);
+      |         ^~~~~~~
+ee.c:4332:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4332 |         fprintf(init_file, "%s\n", nohighlight ? NOHIGHLIGHT : HIGHLIGHT );
+      |         ^~~~~~~
+ee.c:4332:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4332 |         fprintf(init_file, "%s\n", nohighlight ? NOHIGHLIGHT : HIGHLIGHT );
+      |         ^~~~~~~
+ee.c:4333:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4333 |         fprintf(init_file, "%s\n", eightbit ? EIGHTBIT : NOEIGHTBIT );
+      |         ^~~~~~~
+ee.c:4333:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4333 |         fprintf(init_file, "%s\n", eightbit ? EIGHTBIT : NOEIGHTBIT );
+      |         ^~~~~~~
+ee.c:4334:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4334 |         fprintf(init_file, "%s\n", emacs_keys_mode ? EMACS_string : NOEMACS_string );
+      |         ^~~~~~~
+ee.c:4334:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4334 |         fprintf(init_file, "%s\n", emacs_keys_mode ? EMACS_string : NOEMACS_string );
+      |         ^~~~~~~
+ee.c:4335:2: warning: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4335 |         fprintf(init_file, "%s\n", ee_chinese ? chinese_cmd : nochinese_cmd );
+      |         ^~~~~~~
+ee.c:4335:2: note: Call to function 'fprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'fprintf_s' in case of C11
+ 4335 |         fprintf(init_file, "%s\n", ee_chinese ? chinese_cmd : nochinese_cmd );
+      |         ^~~~~~~
+ee.c:4432:8: warning: Call to function 'sprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4432 |         (void)sprintf(template, "/tmp/ee.XXXXXXXX");
+      |               ^~~~~~~
+ee.c:4432:8: note: Call to function 'sprintf' is insecure as it does not provide security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4432 |         (void)sprintf(template, "/tmp/ee.XXXXXXXX");
+      |               ^~~~~~~
+ee.c:4436:3: warning: 3rd function call argument is an uninitialized value [clang-analyzer-core.CallAndMessage]
+ 4436 |                 wprintw(com_win, create_file_fail_msg, name);
+      |                 ^                                      ~~~~
+ee.c:4424:23: note: 'name' declared without an initial value
+ 4424 |         char template[128], *name;
+      |                              ^~~~
+ee.c:4428:2: note: Taking false branch
+ 4428 |         if (restrict_mode())
+      |         ^
+ee.c:4434:6: note: Assuming 'fd' is < 0
+ 4434 |         if (fd < 0) {
+      |             ^~~~~~
+ee.c:4434:2: note: Taking true branch
+ 4434 |         if (fd < 0) {
+      |         ^
+ee.c:4436:3: note: 3rd function call argument is an uninitialized value
+ 4436 |                 wprintw(com_win, create_file_fail_msg, name);
+      |                 ^                                      ~~~~
+ee.c:4441:6: warning: 1st function call argument is an uninitialized value [clang-analyzer-core.CallAndMessage]
+ 4441 |         if (write_file(name, 0))
+      |             ^          ~~~~
+ee.c:4424:23: note: 'name' declared without an initial value
+ 4424 |         char template[128], *name;
+      |                              ^~~~
+ee.c:4428:2: note: Taking false branch
+ 4428 |         if (restrict_mode())
+      |         ^
+ee.c:4434:6: note: Assuming 'fd' is >= 0
+ 4434 |         if (fd < 0) {
+      |             ^~~~~~
+ee.c:4434:2: note: Taking false branch
+ 4434 |         if (fd < 0) {
+      |         ^
+ee.c:4441:6: note: 1st function call argument is an uninitialized value
+ 4441 |         if (write_file(name, 0))
+      |             ^          ~~~~
+ee.c:4443:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4443 |                 sprintf(string, "ispell %s", name);
+      |                 ^~~~~~~
+ee.c:4443:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4443 |                 sprintf(string, "ispell %s", name);
+      |                 ^~~~~~~
+ee.c:4759:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4759 |                 sprintf(modes_menu[1].item_string, "%s %s", mode_strings[1], 
+      |                 ^~~~~~~
+ee.c:4759:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4759 |                 sprintf(modes_menu[1].item_string, "%s %s", mode_strings[1], 
+      |                 ^~~~~~~
+ee.c:4761:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4761 |                 sprintf(modes_menu[2].item_string, "%s %s", mode_strings[2], 
+      |                 ^~~~~~~
+ee.c:4761:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4761 |                 sprintf(modes_menu[2].item_string, "%s %s", mode_strings[2], 
+      |                 ^~~~~~~
+ee.c:4763:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4763 |                 sprintf(modes_menu[3].item_string, "%s %s", mode_strings[3], 
+      |                 ^~~~~~~
+ee.c:4763:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4763 |                 sprintf(modes_menu[3].item_string, "%s %s", mode_strings[3], 
+      |                 ^~~~~~~
+ee.c:4765:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4765 |                 sprintf(modes_menu[4].item_string, "%s %s", mode_strings[4], 
+      |                 ^~~~~~~
+ee.c:4765:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4765 |                 sprintf(modes_menu[4].item_string, "%s %s", mode_strings[4], 
+      |                 ^~~~~~~
+ee.c:4767:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4767 |                 sprintf(modes_menu[5].item_string, "%s %s", mode_strings[5], 
+      |                 ^~~~~~~
+ee.c:4767:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4767 |                 sprintf(modes_menu[5].item_string, "%s %s", mode_strings[5], 
+      |                 ^~~~~~~
+ee.c:4769:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4769 |                 sprintf(modes_menu[6].item_string, "%s %s", mode_strings[6], 
+      |                 ^~~~~~~
+ee.c:4769:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4769 |                 sprintf(modes_menu[6].item_string, "%s %s", mode_strings[6], 
+      |                 ^~~~~~~
+ee.c:4771:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4771 |                 sprintf(modes_menu[7].item_string, "%s %s", mode_strings[7], 
+      |                 ^~~~~~~
+ee.c:4771:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4771 |                 sprintf(modes_menu[7].item_string, "%s %s", mode_strings[7], 
+      |                 ^~~~~~~
+ee.c:4773:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4773 |                 sprintf(modes_menu[8].item_string, "%s %d", mode_strings[8], 
+      |                 ^~~~~~~
+ee.c:4773:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4773 |                 sprintf(modes_menu[8].item_string, "%s %d", mode_strings[8], 
+      |                 ^~~~~~~
+ee.c:4775:3: warning: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11 [clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling]
+ 4775 |                 sprintf(modes_menu[9].item_string, "%s %s", mode_strings[9], 
+      |                 ^~~~~~~
+ee.c:4775:3: note: Call to function 'sprintf' is insecure as it does not provide bounding of the memory buffer or security checks introduced in the C11 standard. Replace with analogous functions that support length arguments or provides boundary checks such as 'sprintf_s' in case of C11
+ 4775 |                 sprintf(modes_menu[9].item_string, "%s %s", mode_strings[9], 
+      |                 ^~~~~~~
+ee.c:4909:3: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4909 |                 strcpy(buffer, user->pw_dir);
+      |                 ^~~~~~
+ee.c:4909:3: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 4909 |                 strcpy(buffer, user->pw_dir);
+      |                 ^~~~~~
+ee.c:4910:3: warning: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4910 |                 strcat(buffer, slash);
+      |                 ^~~~~~
+ee.c:4910:3: note: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119
+ 4910 |                 strcat(buffer, slash);
+      |                 ^~~~~~
+ee.c:4967:7: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4967 |                                                 strcpy(&long_buffer[index], slash);
+      |                                                 ^~~~~~
+ee.c:4967:7: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 4967 |                                                 strcpy(&long_buffer[index], slash);
+      |                                                 ^~~~~~
+ee.c:4990:3: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 4990 |                 strcpy(buffer, long_buffer);
+      |                 ^~~~~~
+ee.c:4990:3: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 4990 |                 strcpy(buffer, long_buffer);
+      |                 ^~~~~~
+ee.c:5052:3: warning: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+ 5052 |                 strcpy(temp2, temp1);
+      |                 ^~~~~~
+ee.c:5052:3: note: Call to function 'strcpy' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcpy'. CWE-119
+ 5052 |                 strcpy(temp2, temp1);
+      |                 ^~~~~~

@@ -107,7 +107,9 @@ nl_catd catalog;
 #define SIGCHLD SIGCLD
 #endif
 
-#define TAB 9
+enum {
+TAB = 9
+};
 #define max(a, b)	(a > b ? a : b)
 #define min(a, b)	(a < b ? a : b)
 
@@ -115,8 +117,10 @@ nl_catd catalog;
  |	defines for type of data to show in info window
  */
 
-#define CONTROL_KEYS 1
-#define COMMANDS     2
+enum {
+CONTROL_KEYS = 1,
+COMMANDS =     2
+};
 
 struct text {
 	unsigned char *line;		/* line of characters		*/

@@ -1,5 +1,5 @@
 # Placed into the public domain via the Unlicense
-project('ee-fbsd', 'c', # change if/when rust is ready
+project('ee', 'c', # change if/when rust is ready
   version : '1.5.1',    # source: trust me
   default_options : ['warning_level=3']) # autogen
 
