@@ -1,0 +1,1 @@
+option('using-musl', type: 'boolean', value: false, description: 'Is the libc musl?')
