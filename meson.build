@@ -85,4 +85,4 @@ curses_deps = dependency('ncursesw')
 executable('ee',
            'ee.c',
            dependencies : [curses_deps],
-           install : false)
+           install : true)
