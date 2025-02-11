@@ -6,26 +6,30 @@ authors = ["Hugh Mahon", "Rust port contributors"]
 description = "Easy Editor (ee) - A simple text editor"
 
 [dependencies]
-# Terminal UI
-tui = "0.19"
-crossterm = "0.27"
+# Core dependencies
+crossterm = "0.25"
+tui = { version = "0.19", default-features = false, features = ["crossterm"] }
 
-# Error handling and utilities
-thiserror = "1.0"
-log = "0.4"
-clap = { version = "4.0", features = ["derive"] }
-
-# Syntax highlighting
+# Editor features
+copypasta = "0.8"
+directories = "5.0"
+regex = "1.9"
 syntect = "5.0"
-tree-sitter = "0.20"
 
 # LSP support
 lsp-types = "0.94"
 tokio = { version = "1.0", features = ["full"] }
-tower-lsp = "0.20"
 tower = { version = "0.4", features = ["util"] }
+tower-lsp = "0.20"
 
-copypasta = "0.8"  # Add clipboard support
+# Utilities
+clap = { version = "4.0", features = ["derive"] }
+log = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+
+dirs = "5.0"
 
 [lib]
 name = "ee_fbsd"

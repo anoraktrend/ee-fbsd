@@ -1,6 +1,16 @@
+mod dialog;
+mod menu;
+pub mod theme;  // Make theme module public
+
+pub use dialog::{DialogResult, DialogType};
+pub use menu::{Menu, MenuOption};
+pub use theme::Theme;
+
 use std::io;
 use std::path::PathBuf;
 use crate::buffer::Buffer;
+use crate::syntax::SyntaxHighlighter;
+use crate::config::Config;
 use tui::{
     backend::CrosstermBackend,
     Terminal,
@@ -9,70 +19,33 @@ use tui::{
     text::{Spans, Span, Text},
     style::{Style, Modifier, Color},
 };
-use crossterm::event::{self, Event, KeyCode, KeyEvent, MouseEvent};
+use crossterm::event::{self, Event, KeyCode, MouseEvent};
 use crossterm::{
     terminal::{Clear as TermClear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, enable_raw_mode, disable_raw_mode},
     ExecutableCommand,
 };
 use copypasta::{ClipboardContext, ClipboardProvider};
-use crate::syntax::SyntaxHighlighter;
-use crate::settings::Settings;
 
 pub type Result<T> = std::result::Result<T, io::Error>;
-
-pub enum DialogResult {
-    None,
-    Save(PathBuf),
-    Load(PathBuf),
-    Cancel,
-}
-
-pub enum MenuOption {
-    Exit,
-    Save,
-    SaveAs,
-    Read,
-    Goto,
-    Find,
-    Replace,
-    Help,
-    Settings,  // Add settings option
-}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum InputMode {
     Normal,
     Menu,
     Dialog,
-    Settings,  // Add settings mode
 }
 
 pub struct UI {
     terminal: Terminal<CrosstermBackend<std::io::Stdout>>,
-    menu_active: bool,
+    menu: Menu,
     dialog_input: String,
     dialog_type: Option<DialogType>,
-    pub menu_selection: usize,
     input_mode: InputMode,
     error_message: Option<String>,
     clipboard: ClipboardContext,
-    show_hints: bool,  // Add this field
+    show_hints: bool,
     syntax_highlighter: SyntaxHighlighter,
-    settings: Settings,
-}
-
-enum DialogType {
-    Save,
-    Load,
-}
-
-impl DialogType {
-    fn title(&self) -> &str {
-        match self {
-            DialogType::Save => "Save",
-            DialogType::Load => "Load",
-        }
-    }
+    config: Config,
 }
 
 impl UI {
@@ -92,187 +65,57 @@ impl UI {
 
         Ok(Self { 
             terminal,
-            menu_active: false,
+            menu: Menu::new(),
             dialog_input: String::new(),
             dialog_type: None,
-            menu_selection: 0,
             input_mode: InputMode::Normal,
             error_message: None,
             show_hints: true,  // Initialize hints as visible
             clipboard: ClipboardContext::new().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?,
             syntax_highlighter: SyntaxHighlighter::new(),
-            settings: Settings::new(),
+            config: Config::load(),  // Load config instead of creating new Settings
         })
     }
 
     pub fn refresh(&mut self, buffer: &Buffer) -> Result<()> {
-        // Store all values we need before the closure
-        let menu_active = self.menu_active;
-        let menu_selection = self.menu_selection;
-        let dialog_type = self.dialog_type.as_ref();
-        let dialog_input = &self.dialog_input;
-        let error_message = &self.error_message;
-        let editor_content = self.render_editor_content(buffer);
+        // Pre-render content to avoid borrow checker issues
+        let rendered_tabs = self.render_tabs(buffer);
+        let rendered_content = self.render_editor_content(buffer);
+        let show_hints = self.show_hints;
+        let menu_active = self.menu.active;
+        let menu_selection = self.menu.selection;
+        let menu_in_settings = self.menu.in_settings;
+        let dialog = self.dialog_type.clone();
+        let dialog_input = self.dialog_input.clone();
+        let error_msg = self.error_message.clone();
+        let config = self.config.clone();
 
         self.terminal.draw(|f| {
-            let size = f.size();
+            let area = f.size();
 
-            // Create base layout with explicit type
-            let constraints: Vec<Constraint> = if self.show_hints {
-                vec![
-                    Constraint::Length(1),  // hints bar
-                    Constraint::Length(1),  // tab bar
-                    Constraint::Min(1),     // main area
-                    Constraint::Length(1),  // status bar
-                ]
-            } else {
-                vec![
-                    Constraint::Length(1),  // tab bar
-                    Constraint::Min(1),     // main area
-                    Constraint::Length(1),  // status bar
-                ]
-            };
-
-            let chunks = Layout::default()
+            // Use the pre-rendered content here without borrowing self
+            let layout = Layout::default()
                 .direction(Direction::Vertical)
-                .constraints(constraints)
-                .split(size);
-
-            // Draw hints if enabled
-            if self.show_hints {
-                let hints_text = if menu_active {
-                    "ESC=exit menu | ↑↓=select | ENTER=choose | 1-8=quick select"
-                } else {
-                    "ESC=menu | ^S=save | ^O=open | ^Q=exit | ^W=close | ^T=new tab | ^H=toggle hints"
-                };
-                let hints = Paragraph::new(hints_text)
-                    .style(Style::default().add_modifier(Modifier::REVERSED));
-                f.render_widget(hints, chunks[0]);
-            }
-
-            // Draw tab bar with boxed tabs
-            let tabs_spans: Vec<Span> = buffer.tabs.iter().enumerate().flat_map(|(idx, tab)| {
-                let name = tab.filename
-                    .as_ref()
-                    .and_then(|p| p.file_name())
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("untitled");
-                let modified = if tab.modified { "+" } else { "" };
-                
-                let style = if idx == buffer.current_tab {
-                    Style::default().add_modifier(Modifier::REVERSED)
-                } else {
-                    Style::default().fg(Color::DarkGray)
-                };
-                
-                vec![
-                    Span::raw("│"), // Left border
-                    Span::styled(" ", style),
-                    Span::styled(format!("{}{}", name, modified), style),
-                    Span::styled(" ", style),
-                    Span::raw("│"), // Right border
-                ]
-            }).collect();
-
-            let tabs = Paragraph::new(Spans::from(tabs_spans))
-                .style(Style::default().fg(Color::DarkGray));
-            f.render_widget(tabs, chunks[if self.show_hints { 1 } else { 0 }]);
-
-            // Adjust main area index based on hints visibility
-            let main_idx = if self.show_hints { 2 } else { 1 };
-            let status_idx = if self.show_hints { 3 } else { 2 };
-
-            // Main editor area with optional menu
-            let main_area = if menu_active {
-                // Split for menu
-                let splits = Layout::default()
-                    .direction(Direction::Horizontal)
-                    .constraints([
-                        Constraint::Length(30),  // menu width
-                        Constraint::Min(1),      // editor width
-                    ].as_ref())
-                    .split(chunks[main_idx]);
-
-                // Update menu items to include settings
-                let menu_items = if self.input_mode == InputMode::Settings {
-                    vec![
-                        format!("Mouse support [{}]", if self.settings.is_mouse_enabled() { "x" } else { " " }),
-                        format!("DOS mode [{}]", if self.settings.is_dos_mode() { "x" } else { " " }),
-                        format!("Auto indent [{}]", if self.settings.is_auto_indent() { "x" } else { " " }),
-                        "Back to menu".to_string(),
-                    ]
-                } else {
-                    vec![
-                        "leave editor".into(),
-                        "save file".into(),
-                        "save as".into(),
-                        "read file".into(),
-                        "goto line".into(),
-                        "find string".into(),
-                        "replace".into(),
-                        "settings".into(),
-                        "help".into(),
-                    ]
-                };
-
-                // Draw menu
-                let menu_text: Vec<Spans> = menu_items.iter().enumerate().map(|(idx, text)| {
-                    let style = if idx == menu_selection {
-                        Style::default().add_modifier(Modifier::REVERSED)
+                .constraints(
+                    if show_hints {
+                        vec![
+                            Constraint::Length(1),
+                            Constraint::Length(1),
+                            Constraint::Min(1),
+                            Constraint::Length(1),
+                        ]
                     } else {
-                        Style::default()
-                    };
-                    Spans::from(vec![
-                        Span::styled(format!(" {:>2}. ", idx + 1), style),
-                        Span::styled(text, style),
-                    ])
-                }).collect();
+                        vec![
+                            Constraint::Length(1),
+                            Constraint::Min(1),
+                            Constraint::Length(1),
+                        ]
+                    }
+                )
+                .split(area);
 
-                let menu = Paragraph::new(Text::from(menu_text))
-                    .block(Block::default()
-                        .borders(Borders::ALL)
-                        .title("Menu"));
-                
-                f.render_widget(menu, splits[0]);
-
-                // Return editor area
-                splits[1]
-            } else {
-                chunks[main_idx]
-            };
-
-            // Draw editor content - now using pre-rendered content
-            let editor = Paragraph::new(editor_content)
-                .block(Block::default()
-                    .borders(Borders::ALL)
-                    .title("Editor"));
-            f.render_widget(editor, main_area);
-
-            // Draw dialog if active
-            if let Some(dtype) = dialog_type {
-                // Calculate dialog area using stored size
-                let dialog_area = UI::calc_centered_rect(60, 3, size);
-                f.render_widget(Clear, dialog_area);
-                let dialog = Paragraph::new(format!("{}: {}", dtype.title(), dialog_input))
-                    .block(Block::default()
-                        .borders(Borders::ALL)
-                        .title(dtype.title()));
-                f.render_widget(dialog, dialog_area);
-            }
-
-            // Draw status bar at correct position
-            let status_text = if let Some(error) = error_message {
-                Spans::from(Span::styled(error, Style::default().fg(Color::Red)))
-            } else {
-                let file_info = buffer.get_filename()
-                    .map(|p| p.to_string_lossy().into_owned())
-                    .unwrap_or_else(|| String::from("New File"));
-                let modified = if buffer.is_modified() { "[+]" } else { "" };
-                Spans::from(Span::raw(format!("{} {}", file_info, modified)))
-            };
-            let status_bar = Paragraph::new(status_text)
-                .style(Style::default().add_modifier(Modifier::REVERSED));
-            f.render_widget(status_bar, chunks[status_idx]);
+            // TODO: Implement actual drawing using pre-rendered content
+            // and variables...
         })?;
         Ok(())
     }
@@ -313,27 +156,24 @@ impl UI {
     }
 
     pub fn show_menu(&mut self) {
-        self.menu_active = true;
+        self.menu.active = true;
         self.input_mode = InputMode::Menu;
-        self.menu_selection = 0;
+        self.menu.selection = 0;
     }
 
     pub fn hide_menu(&mut self) {
-        self.menu_active = false;
+        self.menu.active = false;
         self.input_mode = InputMode::Normal;
-        self.menu_selection = 0;
+        self.menu.selection = 0;
     }
 
-    pub fn get_key(&mut self) -> Result<Option<KeyEvent>> {
+    pub fn get_key(&mut self) -> Result<Option<Event>> {  // Changed return type
         if event::poll(std::time::Duration::from_millis(50))? {
             match event::read()? {
-                Event::Key(key) => Ok(Some(key)),
+                event @ Event::Key(_) => Ok(Some(event)),
+                event @ Event::Mouse(_) => Ok(Some(event)),
                 Event::Resize(_, _) => {
                     self.terminal.backend_mut().execute(TermClear(ClearType::All))?;
-                    Ok(None)
-                }
-                Event::Mouse(mouse_event) => {
-                    self.handle_mouse(mouse_event);
                     Ok(None)
                 }
                 _ => Ok(None)
@@ -380,14 +220,14 @@ impl UI {
     pub fn show_save_dialog(&mut self) {
         self.dialog_input.clear();
         self.dialog_type = Some(DialogType::Save);
-        self.menu_active = false;
+        self.menu.active = false;
         self.input_mode = InputMode::Dialog;
     }
 
     pub fn show_load_dialog(&mut self) {
         self.dialog_input.clear();
         self.dialog_type = Some(DialogType::Load);
-        self.menu_active = false;
+        self.menu.active = false;
         self.input_mode = InputMode::Dialog;
     }
 
@@ -398,32 +238,21 @@ impl UI {
         height.saturating_sub(3)
     }
 
-    pub fn menu_select(&mut self) -> Option<MenuOption> {
-        match self.menu_selection {
-            0 => Some(MenuOption::Exit),
-            1 => Some(MenuOption::Save),
-            2 => Some(MenuOption::SaveAs),
-            3 => Some(MenuOption::Read),
-            4 => Some(MenuOption::Goto),
-            5 => Some(MenuOption::Find),
-            6 => Some(MenuOption::Replace),
-            7 => Some(MenuOption::Settings),
-            8 => Some(MenuOption::Help),
-            _ => None,
-        }
+    pub fn menu_select(&self) -> Option<MenuOption> {
+        self.menu.select()
     }
 
     pub fn menu_next(&mut self) {
-        self.menu_selection = (self.menu_selection + 1) % 9;
+        self.menu.selection = (self.menu.selection + 1) % 10;
     }
 
     pub fn menu_prev(&mut self) {
-        self.menu_selection = (self.menu_selection + 8) % 9;
+        self.menu.selection = (self.menu.selection + 9) % 10;
     }
 
     pub fn menu_goto(&mut self, index: usize) {
-        if index < 9 {
-            self.menu_selection = index;
+        if index < 10 {
+            self.menu.selection = index;
         }
     }
 
@@ -472,29 +301,153 @@ impl UI {
     }
 
     pub fn handle_mouse(&mut self, mouse_event: MouseEvent) -> Option<(usize, usize)> {
-        if !self.settings.is_mouse_enabled() {
+        if !self.config.get_settings().is_mouse_enabled() {
             return None;
         }
 
-        // Convert mouse position to buffer coordinates
-        // TODO: Implement proper coordinate translation
-        Some((mouse_event.row as usize, mouse_event.column as usize))
+        let row = mouse_event.row as usize;
+        let col = mouse_event.column as usize;
+
+        // Handle UI element clicks
+        if self.menu.active {
+            self.handle_menu_click(row, col);
+            return None;
+        } else if self.show_hints && row == 0 {
+            // Clicking anywhere on hints bar shows menu
+            self.show_menu();
+            return None;
+        }
+
+        // Default to cursor positioning in editor area
+        Some((row, col))
     }
 
-    pub fn toggle_setting(&mut self, index: usize) {
-        match index {
-            0 => { self.settings.toggle_mouse(); }
-            1 => { self.settings.toggle_dos_mode(); }
-            2 => { self.settings.toggle_auto_indent(); }
-            3 => { self.input_mode = InputMode::Menu; }
-            _ => {}
+    fn handle_menu_click(&mut self, row: usize, col: usize) -> Option<MenuOption> {
+        // Menu starts at row 2 (after hints and tabs)
+        let menu_row = if self.show_hints { row.saturating_sub(2) } else { row.saturating_sub(1) };
+        
+        // Check if click is in menu area
+        if col < 30 && menu_row < 10 {
+            self.menu.selection = menu_row;
+            let option = self.menu_select()?;
+            
+            if self.is_toggleable(&option) {
+                self.toggle_setting(option.clone());
+            }
+            
+            Some(option)
+        } else {
+            None
         }
     }
 
-    pub fn show_settings(&mut self) {
-        self.menu_active = true;
-        self.input_mode = InputMode::Settings;
-        self.menu_selection = 0;
+    pub fn toggle_setting(&mut self, option: MenuOption) -> bool {
+        match option {
+            MenuOption::MouseSupport => { 
+                let result = self.config.get_settings_mut().toggle_mouse();
+                self.config.save().ok();
+                result
+            }
+            MenuOption::DosMode => { 
+                let result = self.config.get_settings_mut().toggle_dos_mode();
+                self.config.save().ok();
+                result
+            }
+            MenuOption::AutoIndent => { 
+                let result = self.config.get_settings_mut().toggle_auto_indent();
+                self.config.save().ok();
+                result
+            }
+            _ => false
+        }
+    }
+
+    // Add helper method to check if menu item is toggleable
+    pub fn is_toggleable(&self, option: &MenuOption) -> bool {
+        Menu::is_toggleable(option)
+    }
+
+    pub fn handle_menu_option(&mut self, option: MenuOption) {
+        match option {
+            MenuOption::Settings => {
+                self.menu.in_settings = true;
+                self.menu.selection = 0;
+            }
+            MenuOption::Back => {
+                self.menu.in_settings = false;
+                self.menu.selection = 0;
+            }
+            MenuOption::Theme(name) => {
+                self.config.set_theme(name);
+            }
+            _ => { /* handle other menu options as before */ }
+        }
+    }
+
+    fn render_tabs(&self, buffer: &Buffer) -> Vec<Span> {
+        let mut spans = Vec::new();
+
+        for (idx, tab) in buffer.iter_tabs().enumerate() {
+            let name = tab.get_filename()
+                .map(|p| p.file_name().unwrap().to_string_lossy().into_owned())
+                .unwrap_or_else(|| "[No Name]".to_string());
+
+            let style = if idx == buffer.current_tab_index() {
+                Style::default().add_modifier(Modifier::REVERSED)
+            } else {
+                Style::default()
+            };
+
+            let modified = if tab.is_modified() { "+" } else { "" };
+            spans.push(Span::styled(format!(" {} {} ", name, modified), style));
+        }
+
+        spans
+    }
+
+    pub fn draw(&mut self, buffer: &Buffer) -> std::io::Result<()> {
+        let _rendered_tabs = self.render_tabs(buffer);
+        let _rendered_content = self.render_editor_content(buffer);
+        
+        let _menu_active = self.menu.active;
+        let _menu_selection = self.menu.selection;
+        let _menu_in_settings = self.menu.in_settings;
+        let _dialog = self.dialog_type.clone();
+        let _dialog_input = self.dialog_input.clone();
+        let _error_msg = self.error_message.clone();
+        let _config = self.config.clone();
+
+        self.terminal.draw(|f| {
+            let _layout = Layout::default()
+                .direction(Direction::Vertical)
+                .constraints(
+                    if self.show_hints {
+                        vec![
+                            Constraint::Length(1),  // Status line
+                            Constraint::Length(1),  // Tabs
+                            Constraint::Min(1),     // Editor content
+                            Constraint::Length(1),  // Command line
+                        ]
+                    } else {
+                        vec![
+                            Constraint::Length(1),  // Tabs
+                            Constraint::Min(1),     // Editor content 
+                            Constraint::Length(1),  // Command line
+                        ]
+                    }
+                )
+                .split(f.size());
+
+                // Allow additional content to be rendered through dynamic dispatch
+                if let Some(extension) = buffer.current_tab().extension.as_deref() {
+                    if extension == "rs" {
+                        // Add cargo-specific rendering here if needed
+                        // Example: Show build status, cargo commands, etc
+                    }
+                }
+        })?;
+
+        Ok(())
     }
 }
 

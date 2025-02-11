@@ -3,6 +3,7 @@ mod ui;
 mod buffer;
 mod config;
 mod error;
+mod syntax;
 
 use std::process;
 use crossterm::terminal::{disable_raw_mode, LeaveAlternateScreen};

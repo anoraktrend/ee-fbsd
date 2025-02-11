@@ -1,54 +1,72 @@
+use crate::ui::theme::Theme;
 use syntect::highlighting::ThemeSet;
 use syntect::parsing::SyntaxSet;
+use regex::Regex;  // Changed this import
 use tui::style::Color;
 use std::path::Path;
 
 pub struct SyntaxHighlighter {
     syntax_set: SyntaxSet,
     theme_set: ThemeSet,
-    current_theme: String,
+    theme: Option<Theme>,
+    numbers_regex: Option<Regex>,
 }
 
 impl SyntaxHighlighter {
     pub fn new() -> Self {
-        let syntax_set = SyntaxSet::load_defaults_newlines();
-        let theme_set = ThemeSet::load_defaults();
-        
+        let numbers_regex = Regex::new(r"\b\d+\b").ok();
+
         Self {
-            syntax_set,
-            theme_set,
-            current_theme: "base16-ocean.dark".to_string(),
+            syntax_set: SyntaxSet::load_defaults_newlines(),
+            theme_set: ThemeSet::load_defaults(),
+            theme: None,
+            numbers_regex,
         }
     }
 
-    pub fn highlight_line<'a>(&self, line: &'a str, extension: Option<&str>) -> Vec<(Color, &'a str)> {
-        let syntax = match extension {
-            Some(ext) => self.syntax_set.find_syntax_by_extension(ext)
-                .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text()),
-            None => self.syntax_set.find_syntax_plain_text()
-        };
-
-        let mut h = syntect::easy::HighlightLines::new(
-            syntax,
-            &self.theme_set.themes[&self.current_theme]
-        );
-
-        let ranges = h.highlight_line(line, &self.syntax_set)
-            .unwrap_or_default();
-
-        ranges.into_iter()
-            .map(|(style, text)| {
-                let color = Color::Rgb(
-                    style.foreground.r,
-                    style.foreground.g,
-                    style.foreground.b
-                );
-                (color, text)
-            })
-            .collect()
+    pub fn set_theme(&mut self, theme: Theme) {
+        self.theme = Some(theme);
     }
 
-    pub fn get_extension(path: &Path) -> Option<&str> {
+    pub fn highlight_line<'a>(&self, line: &'a str, extension: Option<&str>) -> Vec<(Color, &'a str)> {
+        let default_theme = Theme::default();
+        let theme = self.theme.as_ref().unwrap_or(&default_theme);
+        
+        let mut ranges = Vec::new();
+        
+        if let Some(comment_pos) = line.find("//") {
+            if comment_pos > 0 {
+                self.highlight_code_segment(&line[..comment_pos], extension, theme, &mut ranges);
+            }
+            ranges.push((theme.syntax.comment, &line[comment_pos..]));
+            return ranges;
+        }
+
+        self.highlight_code_segment(line, extension, theme, &mut ranges);
+        
+        if ranges.is_empty() && !line.is_empty() {
+            ranges.push((theme.ui.foreground, line));
+        }
+
+        ranges
+    }
+
+    fn highlight_code_segment<'a>(
+        &self,
+        text: &'a str,
+        _extension: Option<&str>,
+        theme: &Theme,
+        ranges: &mut Vec<(Color, &'a str)>
+    ) {
+        if let Some(_regex) = &self.numbers_regex {
+            // TODO: Implement regex-based highlighting
+            ranges.push((theme.syntax.number, text));
+        } else {
+            ranges.push((theme.ui.foreground, text));
+        }
+    }
+
+    fn get_extension(path: &Path) -> Option<&str> {
         path.extension()
             .and_then(|os_str| os_str.to_str())
     }

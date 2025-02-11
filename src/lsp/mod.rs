@@ -1,3 +1,9 @@
+mod client;
+mod config;
+
+pub use client::LspClient;
+pub use config::{LspConfig, LanguageServerConfig};
+
 use std::process::Stdio;
 use tokio::process::Command;
 use tower_lsp::Client;
