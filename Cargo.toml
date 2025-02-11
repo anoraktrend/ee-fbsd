@@ -1,21 +1,18 @@
-[workspace]
-members = [
-]
 [package]
-name = "ee-rust"
-authors = ["Hugh Mahon, Lucy Randall, C2Rust"]
-version = "1.0.0"
-publish = false
+name = "ee-fbsd"
+version = "1.5.2"
 edition = "2021"
-autobins = false
+description = "Easy Editor - A simple terminal-based text editor"
+authors = ["Hugh Mahon"]
 
-[lib]
-name = "ee_lib"
-path = "ee-lib.rs"
-crate-type = ["staticlib", "rlib"]
-[[bin]]
-path = "ee.rs"
-name = "ee"
 [dependencies]
-libc= "0.2"
+libc = "0.2"
 ncurses = "6.0.0"
+thiserror = "1.0"
+log = "0.4"
+anyhow = "1.0"
+clap = { version = "4.0", features = ["derive"] }
+syntect = "5.0"
+tui = "0.19"
+crossterm = "0.25"
+unicode-width = "0.1"
