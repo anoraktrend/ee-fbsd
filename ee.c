@@ -78,6 +78,56 @@ char *version = "@(#) ee, version "  EE_VERSION  " $Revision: 1.104 $";
 #include <string.h>
 #include <pwd.h>
 #include <locale.h>
+#include <sys/wait.h> // Add missing wait() declaration
+#include <stddef.h>
+#include <stdint.h>
+#include <limits.h>
+#include <stdlib.h> // Add missing stdlib.h include
+
+// Move these window declarations before ee_malloc()
+WINDOW *com_win;
+WINDOW *text_win;
+WINDOW *help_win;
+WINDOW *info_win;
+
+// Safe memory allocation with checks
+static void* ee_malloc(size_t size) {
+    if (size == 0 || size > PTRDIFF_MAX) {
+        return NULL;
+    }
+    void* ptr = malloc(size);
+    if (!ptr) {
+        // Handle allocation failure
+        if (com_win) {
+            wmove(com_win, 0, 0);
+            wprintw(com_win, "Memory allocation failed\n");
+            wrefresh(com_win);
+        }
+    }
+    return ptr;
+}
+
+// Safe string copy
+static size_t ee_strlcpy(char *dst, const char *src, size_t size) {
+    if (!dst || !src || size == 0) return 0;
+    size_t srclen = strlen(src);
+    if (srclen + 1 < size) {
+        memcpy(dst, src, srclen + 1);
+    } else {
+        memcpy(dst, src, size - 1);
+        dst[size-1] = '\0';
+    }
+    return srclen;
+}
+
+// Safe string concatenation 
+static size_t ee_strlcat(char *dst, const char *src, size_t size) {
+    if (!dst || !src || size == 0) return 0;
+    size_t dstlen = strnlen(dst, size);
+    size_t srclen = strlen(src);
+    if (dstlen >= size) return size + srclen;
+    return dstlen + ee_strlcpy(dst + dstlen, src, size - dstlen);
+}
 
 #ifdef HAS_SYS_WAIT
 #include <sys/wait.h>
@@ -138,7 +188,7 @@ struct text *tmp_line;		/* temporary line pointer		*/
 struct text *srch_line;		/* temporary pointer for search routine */
 
 struct files {		/* structure to store names of files to be edited*/
-	unsigned char *name;		/* name of file				*/
+	char *name;		/* name of file				*/
 	struct files *next_name;
 	};
 
@@ -191,19 +241,19 @@ int ee_chinese = FALSE;		/* allows handling of multi-byte characters  */
 				/* sequence				     */
 
 unsigned char *point;		/* points to current position in line	*/
-unsigned char *srch_str;	/* pointer for search string		*/
-unsigned char *u_srch_str;	/* pointer to non-case sensitive search	*/
+char *srch_str;	/* pointer for search string		*/
+char *u_srch_str;	/* pointer to non-case sensitive search	*/
 unsigned char *srch_1;		/* pointer to start of suspect string	*/
 unsigned char *srch_2;		/* pointer to next character of string	*/
 unsigned char *srch_3;
-unsigned char *in_file_name = NULL;	/* name of input file		*/
+char *in_file_name = NULL;	/* name of input file		*/
 char *tmp_file;	/* temporary file name			*/
 unsigned char *d_char;		/* deleted character			*/
 unsigned char *d_word;		/* deleted word				*/
 unsigned char *d_line;		/* deleted line				*/
-char in_string[513];	/* buffer for reading a file		*/
-unsigned char *print_command = (unsigned char *)"lpr";	/* string to use for the print command 	*/
-unsigned char *start_at_line = NULL;	/* move to this line at start of session*/
+char in_string[513];	/* buffer for reading a file		 */
+char *print_command = "lpr";	/* string to use for the print command 	*/
+char *start_at_line = NULL;	/* move to this line at start of session*/
 int in;				/* input character			*/
 
 FILE *temp_fp;			/* temporary file pointer		*/
@@ -214,12 +264,6 @@ char *table[] = {
 	"^K", "^L", "^M", "^N", "^O", "^P", "^Q", "^R", "^S", "^T", "^U", 
 	"^V", "^W", "^X", "^Y", "^Z", "^[", "^\\", "^]", "^^", "^_"
 	};
-
-WINDOW *com_win;
-WINDOW *text_win;
-WINDOW *help_win;
-WINDOW *info_win;
-
 
 /*
  |	The following structure allows menu items to be flexibly declared.
@@ -260,7 +304,7 @@ void draw_line(int vertical, int horiz, unsigned char *ptr, int t_pos, int lengt
 void insert_line(int disp);
 struct text *txtalloc(void);
 struct files *name_alloc(void);
-unsigned char *next_word(unsigned char *string);
+char *next_word(char *string);
 void prev_word(void);
 void control(void);
 void emacs_control(void);
@@ -285,7 +329,7 @@ void midscreen(int line, unsigned char *pnt);
 void get_options(int numargs, char *arguments[]);
 void check_fp(void);
 void get_file(char *file_name);
-void get_line(int length, unsigned char *in_string, int *append);
+void get_line(int length, char *in_string, int *append);
 void draw_screen(void);
 void finish(void);
 int quit(int noverify);
@@ -418,7 +462,6 @@ struct menu_entries main_menu[] = {
 	{"", menu_op, misc_menu, NULL, NULL, -1}, 
 	{NULL, NULL, NULL, NULL, NULL, -1}
 	};
-
 char *help_text[23];
 char *control_keys[5];
 
@@ -538,6 +581,47 @@ FILE *fopen();			/* declaration for open function	*/
 #endif /* HAS_STDLIB */
 #endif /* __STDC__ */
 
+/* Editor configuration */
+struct ee_config {
+    int expand_tabs;         /* flag for expanding tabs */
+    int case_sensitive;      /* case sensitive search flag */
+    int info_window;        /* flag to indicate if help window visible */
+    int info_type;          /* flag to indicate type of info to display */
+    int observ_margins;     /* flag for whether margins are observed */
+    int auto_format;        /* flag for auto_format mode */
+    int restricted;         /* flag to indicate restricted mode */
+    int nohighlight;       /* turns off highlighting */
+    int eightbit;          /* eight bit character flag */
+    int emacs_keys_mode;   /* mode for if emacs key binings are used */
+    int ee_chinese;        /* allows handling of multi-byte characters */
+    int right_margin;      /* the right margin */
+    char *print_command; /* string to use for the print command */
+};
+
+static struct ee_config config __attribute__((unused)) = {
+    .expand_tabs = TRUE,
+    .case_sensitive = FALSE,
+    .info_window = TRUE,
+    .info_type = CONTROL_KEYS,
+    .observ_margins = TRUE,
+    .auto_format = FALSE,
+    .restricted = FALSE,
+    .nohighlight = FALSE,
+    .eightbit = TRUE,
+    .emacs_keys_mode = FALSE,
+    .ee_chinese = FALSE,
+    .right_margin = 0,
+    .print_command = "lpr"
+};
+
+/* Editor states */
+enum editor_state {
+    STATE_NORMAL,
+    STATE_INSERT,
+    STATE_COMMAND,
+    STATE_MENU
+};
+
 /* beginning of main program		*/
 int
 main(int argc, char *argv[])
@@ -557,15 +641,30 @@ main(int argc, char *argv[])
 	signal(SIGCHLD, SIG_DFL);
 	signal(SIGSEGV, SIG_DFL);
 	signal(SIGINT, edit_abort);
-	d_char = malloc(3);	/* provide a buffer for multi-byte chars */
-	d_word = malloc(150);
+	d_char = ee_malloc(3);	/* provide a buffer for multi-byte chars */
+	if (!d_char) {
+        fprintf(stderr, "Failed to allocate d_char\n");
+        exit(1);
+    }
+	d_word = ee_malloc(150);
+	if (!d_word) {
+        free(d_char);
+        fprintf(stderr, "Failed to allocate d_word\n");
+        exit(1);
+    }
 	*d_word = '\0';
 	d_line = NULL;
 	dlt_line = txtalloc();
 	dlt_line->line = d_line;
 	dlt_line->line_length = 0;
 	curr_line = first_line = txtalloc();
-	curr_line->line = point = malloc(10);
+	curr_line->line = point = ee_malloc(10);
+	if (!curr_line->line) {
+        free(d_char);
+        free(d_word);
+        fprintf(stderr, "Failed to allocate curr_line->line\n");
+        exit(1);
+    }
 	curr_line->line_length = 1;
 	curr_line->max_length = 10;
 	curr_line->prev_line = NULL;
@@ -933,7 +1032,7 @@ out_char(WINDOW *window, int character, int column)
 {
 	int i1, i2;
 	char *string;
-	char string2[8];
+	char string2[16];  // Increased from 8 to handle larger numbers
 
 	if (character == TAB)
 	{
@@ -1141,8 +1240,8 @@ name_alloc(void)
 }
 
 /* move to next word in string		*/
-unsigned char *
-next_word(unsigned char *string)
+char *
+next_word(char *string)
 {
 	while ((*string != '\0') && ((*string != 32) && (*string != 9)))
 		string++;
@@ -1878,7 +1977,8 @@ get_string(char *prompt, int advance)
 	int g_horz, g_position, g_pos;
 	int esc_flag;
 
-	g_point = tmp_string = malloc(512);
+	g_point = tmp_string = ee_malloc(512);
+	if (!tmp_string) return NULL;
 	wmove(com_win,0,0);
 	wclrtoeol(com_win);
 	waddstr(com_win, prompt);
@@ -1939,14 +2039,18 @@ get_string(char *prompt, int advance)
 	nam_str = tmp_string;
 	if (((*nam_str == ' ') || (*nam_str == 9)) && (advance))
 		nam_str = next_word(nam_str);
-	string = malloc(strlen(nam_str) + 1);
-	strcpy(string, nam_str);
+	string = ee_malloc(strlen(nam_str) + 1);
+	if (!string) {
+        free(tmp_string);
+        return NULL;
+    }
+	ee_strlcpy(string, nam_str, strlen(nam_str) + 1);
 	free(tmp_string);
 	wrefresh(com_win);
 	return(string);
 }
 
-/* compare two strings	*/
+/* compare two strings */
 int 
 compare(char *string1, char *string2, int sensitive)
 {
@@ -2300,7 +2404,7 @@ get_file(char *file_name)
 
 /* read string and split into lines */
 void 
-get_line(int length, unsigned char *in_string, int *append)
+get_line(int length, char *in_string, int *append)
 {
 	unsigned char *str1;
 	unsigned char *str2;
@@ -2310,7 +2414,7 @@ get_line(int length, unsigned char *in_string, int *append)
 	struct text *tline;	/* temporary pointer to new line	*/
 	int first_time;		/* if TRUE, the first time through the loop */
 
-	str2 = in_string;
+	str2 = (unsigned char *)in_string;
 	num = 0;
 	first_time = TRUE;
 	while (num < length)
@@ -3348,7 +3452,7 @@ menu_op(struct menu_entries menu_list[])
 	int counter;
 	int length;
 	int input;
-	int temp;
+	int temp = 0;
 	int list_size;
 	int top_offset;		/* offset from top where menu items start */
 	int vert_size;		/* vertical size for menu list item display */
@@ -3484,7 +3588,7 @@ menu_op(struct menu_entries menu_list[])
 					break;
 				default:
 					break;
-			}
+				}
 		}
 	
 		if (((list_size - off_start) >= (vert_size - 1)) && 
@@ -4084,7 +4188,7 @@ Format(void)
 
 	while ((status) && (string_count > 0))
 	{
-		search(FALSE);
+		status = search(FALSE);
 		string_count--;
 	}
 
@@ -4425,7 +4529,7 @@ spell_op(void)
 void 
 ispell_op(void)
 {
-	char template[128], *name;
+	char template[128], *name = NULL;
 	char string[256];
 	int fd;
 
@@ -5250,7 +5354,7 @@ strings_init(void)
 	emacs_control_keys[0] = catgetlocal( 154, "^[ (escape) menu ^y search prompt ^k delete line   ^p prev li     ^g prev page");
 	emacs_control_keys[1] = catgetlocal( 155, "^o ascii code    ^x search        ^l undelete line ^n next li     ^v next page");
 	emacs_control_keys[2] = catgetlocal( 156, "^u end of file   ^a begin of line ^w delete word   ^b back 1 char ^z next word");
-	emacs_control_keys[3] = catgetlocal( 157, "^t top of text   ^e end of line   ^r restore word  ^f forward char            ");
+	emacs_control_keys[3] = catgetlocal( 157, "^t top of text   ^e end of line   ^v undelete word  ^f forward char            ");
 	emacs_control_keys[4] = catgetlocal( 158, "^c command       ^d delete char   ^j undelete char              ESC-Enter: exit");
 	EMACS_string = catgetlocal( 159, "EMACS");
 	NOEMACS_string = catgetlocal( 160, "NOEMACS");
@@ -5331,7 +5435,15 @@ strings_init(void)
 
 	for (counter = 1; counter < NUM_MODES_ITEMS; counter++)
 	{
-		modes_menu[counter].item_string = malloc(80);
+		modes_menu[counter].item_string = ee_malloc(80);
+		if (!modes_menu[counter].item_string) {
+            // Clean up previous allocations
+            while (--counter >= 1) {
+                free(modes_menu[counter].item_string);
+            }
+            fprintf(stderr, "Failed to allocate menu strings\n");
+            exit(1);
+        }
 	}
 
 #ifndef NO_CATGETS

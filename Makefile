@@ -1,29 +1,53 @@
-# This is the make file for ee, the "easy editor".
-#
-# A file called 'make.local' will be generated which will contain information 
-# specific to the local system, such as if it is a BSD or System V based 
-# version of UNIX, whether or not it has catgets, or select.  
-#
-# The "install" target ("make install") will copy the ee binary to 
-# the /usr/local/bin directory on the local system.  The man page (ee.1) 
-# will be copied into the /usr/local/man/man1 directory.
-#
-# The "clean" target ("make clean") will remove the ee and new_curse.o 
-# object files, and the ee binary.
-#
+CC?=		gcc
+CFLAGS+=	-O2 -Wall 
+PREFIX?=	/usr/local
+BINDIR=		${PREFIX}/bin
+MANDIR=		${PREFIX}/share/man/man1
 
-all :	localmake buildee
+# Check for ncurses
+LIBS=		-lncurses
+CFLAGS+=	-DHAS_NCURSES -DHAS_UNISTD -DHAS_STDARG -DHAS_STDLIB
 
-buildee :	
-	make -f make.local
+# Source files
+SRCS=		ee.c
+OBJS=		${SRCS:.c=.o}
+PROG=		ee
 
-localmake:
-	@./create.make
+# Installation mode
+BINMODE=	755
+MANMODE=	644
 
-install :
-	install -Dm755 ee $(DESTDIR)/usr/bin/ee
-	install -Dm644 ee.1 $(DESTDIR)/usr/share/man/man1/ee.1
+# Main targets
+all: ${PROG}
 
-clean :
-	rm -f ee.o new_curse.o ee 
+${PROG}: ${OBJS}
+	${CC} ${CFLAGS} -o ${PROG} ${OBJS} ${LIBS}
+
+install: ${PROG}
+	install -d ${DESTDIR}${BINDIR}
+	install -m ${BINMODE} ${PROG} ${DESTDIR}${BINDIR}
+	ln -sf ${PROG} ${DESTDIR}${BINDIR}/ree
+	install -d ${DESTDIR}${MANDIR}
+	install -m ${MANMODE} ee.1 ${DESTDIR}${MANDIR}
+
+clean:
+	rm -f ${PROG} ${OBJS} core *.core
+
+distclean: clean
+	rm -f .depend
+
+depend: ${SRCS}
+	mkdep ${CFLAGS} ${SRCS}
+
+lint:
+	lint -hx ${SRCS}
+
+tags:
+	ctags ${SRCS}
+
+.PHONY: all install clean distclean depend lint tags
+
+# Default make rules
+.c.o:
+	${CC} ${CFLAGS} -c $<
 

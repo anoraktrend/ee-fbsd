@@ -47,11 +47,14 @@ char * new_curse_name= "@(#) new_curse.c $Revision: 1.54 $";
 #include "new_curse.h"
 #include <signal.h>
 #include <fcntl.h>
+#include <sys/fcntl.h>
 
 #ifdef SYS5
 #include <string.h>
 #else
 #include <strings.h>
+#include <sys/ioctl.h>
+#include <sgtty.h>
 #endif
 
 #ifdef BSD_SELECT
@@ -855,13 +858,19 @@ printf("starting initscr \n");fflush(stdout);
 	case 022:	speed = 38400.0;
 		break;
 	default:	speed = 0.0;
-	}
-#else
-	value = ioctl(0, TIOCGETP, &Terminal);
-	if (Terminal.sg_flags & EVENP)
-		Parity = 2;
-	else if (Terminal.sg_flags & ODDP)
-		Parity = 1;
+	#ifdef __FreeBSD__
+		value = tcgetattr(0, &Terminal);
+		Parity = 0; /* FreeBSD doesn't use EVENP/ODDP flags */
+		value = cfgetospeed(&Terminal);
+	#else
+		value = ioctl(0, TIOCGETP, &Terminal);
+		if (Terminal.sg_flags & EVENP)
+			Parity = 2;
+		else if (Terminal.sg_flags & ODDP)
+			Parity = 1;
+		value = Terminal.sg_ospeed;
+	#endif
+		switch (value) {
 	value = Terminal.sg_ospeed;
 	switch (value) {
 	case 01:	speed = 50.0;
@@ -2276,7 +2285,7 @@ WINDOW *window;
 	if (Noblock)
 	{
 		Time_Out = FALSE;
-		old_arg = fcntl(0, F_GETFL, 0);
+		in_value = fcntl(0, F_SETFL, old_arg | O_NONBLOCK);
 		in_value = fcntl(0, F_SETFL, old_arg | FNDELAY);
 	}
 	in_value = ((bufp > 0) ? in_buff[--bufp] : read(0, &temp, 1)? temp : -1);

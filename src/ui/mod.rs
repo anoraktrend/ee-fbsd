@@ -2,6 +2,7 @@ mod highlight;
 mod theme;
 
 use std::io;
+pub use highlight::highlight_content;
 pub use theme::Theme;
 use tui::{
     backend::CrosstermBackend,
@@ -51,4 +52,17 @@ impl UI {
         }
         Ok(None)
     }
+}
+
+pub fn highlight_buffer(buffer: &crate::buffer::Buffer) -> Vec<String> {
+    let theme = Theme::default();
+    highlight_content(buffer, &theme)
+        .into_iter()
+        .map(|spans| {
+            spans.0.into_iter()
+                .map(|span| span.content)
+                .collect::<Vec<_>>()
+                .join("")
+        })
+        .collect()
 }

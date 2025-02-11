@@ -22,9 +22,10 @@ pub fn highlight_content<'a>(buffer: &'a Buffer, theme: &'a Theme) -> Vec<Spans<
     let mut h = HighlightLines::new(syntax, &ts.themes["base16-ocean.dark"]);
 
     buffer.lines().iter().map(|line| {
-        let regions = match h.highlight_line(line, &ss) {
+        let line_str = line.as_str();
+        let regions = match h.highlight_line(line_str, &ss) {
             Ok(regions) => regions,
-            Err(_) => vec![(syntect::highlighting::Style::default(), line.as_str())]
+            Err(_) => vec![(syntect::highlighting::Style::default(), line_str)]
         };
         
         let spans: Vec<Span> = regions.into_iter().map(|(style, text)| {

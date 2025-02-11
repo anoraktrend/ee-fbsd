@@ -1,6 +1,8 @@
 use std::path::PathBuf;
 
+#[derive(Default)]
 pub struct Buffer {
+    pub content: String,
     lines: Vec<String>,
     cursor: Cursor,
     filename: Option<PathBuf>,
@@ -8,6 +10,7 @@ pub struct Buffer {
     syntax_name: Option<String>,
 }
 
+#[derive(Default)]
 pub struct Cursor {
     pub line: usize,
     pub column: usize,
@@ -15,13 +18,15 @@ pub struct Cursor {
 
 impl Buffer {
     pub fn new() -> Self {
-        Self {
-            lines: vec![String::new()],
-            cursor: Cursor { line: 0, column: 0 },
-            filename: None,
-            modified: false,
-            syntax_name: None,
-        }
+        Self::default()
+    }
+
+    pub fn set_filename(&mut self, filename: PathBuf) {
+        self.filename = Some(filename);
+    }
+
+    pub fn get_filename(&self) -> Option<&PathBuf> {
+        self.filename.as_ref()
     }
 
     pub fn should_quit(&self) -> bool {
