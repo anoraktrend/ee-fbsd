@@ -11,9 +11,6 @@ pub struct Editor<'a> {
     pub expand_tabs: bool, 
     pub info_window: bool,
     pub margins: bool,
-    pub auto_format: bool,
-    pub eight_bit: bool,
-    pub right_margin: i32,
     pub current_line: i32,
     pub current_col: i32,
     pub screen_cols: i32,
@@ -32,9 +29,6 @@ impl<'a> Editor<'a> {
             expand_tabs: true,
             info_window: true,
             margins: true,
-            auto_format: false,
-            eight_bit: true,
-            right_margin: 72,
             current_line: 0,
             current_col: 0,
             screen_cols: 0,
@@ -187,7 +181,7 @@ impl<'a> Editor<'a> {
     }
 
     pub fn display_text(&self) {
-        let mut y = 0;
+        let mut y = 1; // Start after hint bar
         
         // Clear screen
         wclear(stdscr());
@@ -201,11 +195,12 @@ impl<'a> Editor<'a> {
             y += 1;
         }
 
-        // Draw status line
+        // Draw status line and hint bar
         self.draw_status_line();
+        self.windows.refresh();
         
         // Position cursor
-        mv(self.current_line, self.current_col);
+        mv(self.current_line + 1, self.current_col);
         refresh();
     }
 
