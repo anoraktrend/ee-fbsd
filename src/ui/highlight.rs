@@ -1,3 +1,5 @@
+// TODO: Implement syntax highlighting when needed
+/*
 use crate::buffer::Buffer;
 use syntect::{
     easy::HighlightLines,
@@ -41,3 +43,4 @@ pub fn highlight_content<'a>(buffer: &'a Buffer, theme: &'a Theme) -> Vec<Spans<
 fn convert_color(color: syntect::highlighting::Color) -> Color {
     Color::Rgb(color.r, color.g, color.b)
 }
+*/

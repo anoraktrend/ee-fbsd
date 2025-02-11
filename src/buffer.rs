@@ -1,23 +1,33 @@
 use std::path::PathBuf;
 use std::fs;
 use std::io::{self, Read};  // Remove unused Write import
+use std::path::Path;
+use crate::syntax::SyntaxHighlighter;
+
+#[derive(Clone, Default, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Cursor {
+    pub line: usize,
+    pub column: usize,
+}
+
+#[derive(Clone, Default)]
+pub struct Selection {
+    pub start: Cursor,
+    pub end: Cursor,
+}
 
 pub struct Tab {
     pub lines: Vec<String>,  // Make public
     pub cursor: Cursor,      // Make public
     pub modified: bool,      // Make public
     pub filename: Option<PathBuf>,    // Make public
+    pub selection: Option<Selection>,
+    pub extension: Option<String>,
 }
 
 pub struct Buffer {
     pub tabs: Vec<Tab>,     // Make public
     pub current_tab: usize, // Make public
-}
-
-#[derive(Default)]  // Add Default derive
-pub struct Cursor {
-    pub line: usize,
-    pub column: usize,
 }
 
 impl Buffer {
@@ -91,6 +101,34 @@ impl Buffer {
     pub fn move_cursor(&mut self, direction: CursorMove) {
         self.current_tab_mut().move_cursor(direction);
     }
+
+    // Add delegation methods for selection
+    pub fn start_selection(&mut self) {
+        self.current_tab_mut().start_selection();
+    }
+
+    pub fn update_selection(&mut self) {
+        self.current_tab_mut().update_selection();
+    }
+
+    pub fn clear_selection(&mut self) {
+        self.current_tab_mut().clear_selection();
+    }
+
+    pub fn get_selected_text(&self) -> Option<String> {
+        self.current_tab().get_selected_text()
+    }
+
+    pub fn delete_selection(&mut self) -> Option<String> {
+        self.current_tab_mut().delete_selection()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.tabs.len() == 1 && 
+        self.tabs[0].lines.len() == 1 && 
+        self.tabs[0].lines[0].is_empty() &&
+        !self.tabs[0].modified
+    }
 }
 
 impl Tab {
@@ -163,10 +201,15 @@ impl Tab {
             self.lines.push(String::new());
         }
         
-        self.filename = Some(path);
+        self.filename = Some(path.clone());
         self.modified = false;
         self.cursor.line = 0;
         self.cursor.column = 0;
+        
+        self.extension = path.extension()
+            .and_then(|os_str| os_str.to_str())
+            .map(String::from);
+        
         Ok(())
     }
 
@@ -215,6 +258,57 @@ impl Tab {
         let line_len = self.lines[self.cursor.line].len();
         self.cursor.column = self.cursor.column.min(line_len);
     }
+
+    pub fn get_selected_text(&self) -> Option<String> {
+        self.selection.as_ref().map(|sel| {
+            let (start, end) = if sel.start <= sel.end {
+                (&sel.start, &sel.end)
+            } else {
+                (&sel.end, &sel.start)
+            };
+
+            let mut text = String::new();
+            for line_idx in start.line..=end.line {
+                let line = &self.lines[line_idx];
+                if line_idx == start.line && line_idx == end.line {
+                    text.push_str(&line[start.column.min(line.len())..end.column.min(line.len())]);
+                } else if line_idx == start.line {
+                    text.push_str(&line[start.column.min(line.len())..]);
+                    text.push('\n');
+                } else if line_idx == end.line {
+                    text.push_str(&line[..end.column.min(line.len())]);
+                } else {
+                    text.push_str(line);
+                    text.push('\n');
+                }
+            }
+            text
+        })
+    }
+
+    pub fn start_selection(&mut self) {
+        self.selection = Some(Selection {
+            start: self.cursor.clone(),
+            end: self.cursor.clone(),
+        });
+    }
+
+    pub fn update_selection(&mut self) {
+        if let Some(sel) = &mut self.selection {
+            sel.end = self.cursor.clone();
+        }
+    }
+
+    pub fn clear_selection(&mut self) {
+        self.selection = None;
+    }
+
+    pub fn delete_selection(&mut self) -> Option<String> {
+        let text = self.get_selected_text()?;
+        // TODO: Implement delete selected text
+        self.clear_selection();
+        Some(text)
+    }
 }
 
 impl Default for Tab {
@@ -224,6 +318,8 @@ impl Default for Tab {
             cursor: Cursor::default(),
             modified: false,
             filename: None,
+            selection: None,
+            extension: None,
         }
     }
 }
