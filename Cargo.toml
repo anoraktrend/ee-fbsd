@@ -1,18 +1,28 @@
 [package]
 name = "ee-fbsd"
-version = "1.5.2"
+version = "0.1.0"
 edition = "2021"
-description = "Easy Editor - A simple terminal-based text editor"
-authors = ["Hugh Mahon"]
+authors = ["Hugh Mahon", "Rust port contributors"]
+description = "Easy Editor (ee) - A simple text editor"
 
 [dependencies]
-libc = "0.2"
-ncurses = "6.0.0"
+# Terminal UI
+tui = "0.19"
+crossterm = "0.27"
+ncurses = "5.101"
+
+# Syntax highlighting
+syntect = "5.0"
+
+# Error handling and utilities
 thiserror = "1.0"
 log = "0.4"
-anyhow = "1.0"
 clap = { version = "4.0", features = ["derive"] }
-syntect = "5.0"
-tui = "0.19"
-crossterm = "0.25"
-unicode-width = "0.1"
+
+[lib]
+name = "ee_fbsd"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ee"
+path = "src/main.rs"

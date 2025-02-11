@@ -59,12 +59,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.95"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34ac096ce696dc2fcabef30516bb13c0a68a11d30131d3df6f04711467681b04"
-
-[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -190,6 +184,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "crossterm"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f476fe445d41c9e991fd07515a6f463074b782242ccf4a5b7b1d1012e70824df"
+dependencies = [
+ "bitflags 2.8.0",
+ "crossterm_winapi",
+ "libc",
+ "mio",
+ "parking_lot",
+ "signal-hook",
+ "signal-hook-mio",
+ "winapi",
+]
+
+[[package]]
 name = "crossterm_winapi"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -209,18 +219,15 @@ dependencies = [
 
 [[package]]
 name = "ee-fbsd"
-version = "1.5.2"
+version = "0.1.0"
 dependencies = [
- "anyhow",
  "clap",
- "crossterm",
- "libc",
+ "crossterm 0.27.0",
  "log",
  "ncurses",
  "syntect",
  "thiserror",
  "tui",
- "unicode-width",
 ]
 
 [[package]]
@@ -336,9 +343,9 @@ dependencies = [
 
 [[package]]
 name = "ncurses"
-version = "6.0.1"
+version = "5.101.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbd71afa95710e841d173521e8483e764004eb332bdf47bd01d00f568688027f"
+checksum = "5e2c5d34d72657dc4b638a1c25d40aae81e4f1c699062f72f467237920752032"
 dependencies = [
  "cc",
  "libc",
@@ -662,7 +669,7 @@ checksum = "ccdd26cbd674007e649a272da4475fb666d3aa0ad0531da7136db6fab0e5bad1"
 dependencies = [
  "bitflags 1.3.2",
  "cassowary",
- "crossterm",
+ "crossterm 0.25.0",
  "unicode-segmentation",
  "unicode-width",
 ]
@@ -729,7 +736,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
