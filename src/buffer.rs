@@ -1,15 +1,22 @@
 use std::path::PathBuf;
 use std::fs;
-use std::io::{self, Read, Write};
+use std::io::{self, Read};  // Remove unused Write import
 
-pub struct Buffer {
-    lines: Vec<String>,
-    cursor: Cursor,
-    modified: bool,
-    syntax_name: Option<String>,
-    filename: Option<PathBuf>,
+#[derive(Default)]
+pub struct Tab {
+    pub lines: Vec<String>,  // Make public
+    pub cursor: Cursor,      // Make public
+    pub modified: bool,      // Make public
+    pub syntax_name: Option<String>,  // Make public
+    pub filename: Option<PathBuf>,    // Make public
 }
 
+pub struct Buffer {
+    pub tabs: Vec<Tab>,     // Make public
+    pub current_tab: usize, // Make public
+}
+
+#[derive(Default)]  // Add Default derive
 pub struct Cursor {
     pub line: usize,
     pub column: usize,
@@ -18,18 +25,85 @@ pub struct Cursor {
 impl Buffer {
     pub fn new() -> Self {
         Self {
-            lines: vec![String::new()],
-            cursor: Cursor { line: 0, column: 0 },
-            modified: false,
-            syntax_name: None,
-            filename: None,
+            tabs: vec![Tab::default()],
+            current_tab: 0,
         }
     }
 
-    pub fn should_quit(&self) -> bool {
-        !self.modified
+    pub fn current_tab(&self) -> &Tab {
+        &self.tabs[self.current_tab]
     }
 
+    pub fn current_tab_mut(&mut self) -> &mut Tab {
+        &mut self.tabs[self.current_tab]
+    }
+
+    pub fn next_tab(&mut self) {
+        if !self.tabs.is_empty() {
+            self.current_tab = (self.current_tab + 1) % self.tabs.len();
+        }
+    }
+
+    pub fn prev_tab(&mut self) {
+        if !self.tabs.is_empty() {
+            self.current_tab = (self.current_tab + self.tabs.len() - 1) % self.tabs.len();
+        }
+    }
+
+    pub fn new_tab(&mut self) {
+        self.tabs.push(Tab::default());
+        self.current_tab = self.tabs.len() - 1;
+    }
+
+    pub fn close_tab(&mut self) -> bool {
+        if self.tabs.len() > 1 {
+            self.tabs.remove(self.current_tab);
+            if self.current_tab >= self.tabs.len() {
+                self.current_tab = self.tabs.len() - 1;
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    // Delegate methods to current tab
+    pub fn lines(&self) -> &Vec<String> { &self.current_tab().lines }
+    pub fn get_cursor(&self) -> &Cursor { &self.current_tab().cursor }
+    pub fn is_modified(&self) -> bool { self.current_tab().modified }
+    pub fn get_filename(&self) -> Option<&PathBuf> { self.current_tab().filename.as_ref() }
+    
+    // Move existing methods to Tab impl and delegate from Buffer
+    pub fn insert_char(&mut self, c: char) {
+        self.current_tab_mut().insert_char(c);
+    }
+
+    pub fn delete_char(&mut self) {
+        self.current_tab_mut().delete_char();
+    }
+
+    pub fn syntax_name(&self) -> Option<&str> {
+        self.current_tab().syntax_name.as_deref()
+    }
+
+    pub fn set_syntax_name(&mut self, name: Option<String>) {
+        self.current_tab_mut().set_syntax_name(name);
+    }
+
+    pub fn save(&mut self, filename: Option<PathBuf>) -> io::Result<()> {
+        self.current_tab_mut().save(filename)
+    }
+
+    pub fn load(&mut self, path: PathBuf) -> io::Result<()> {
+        self.current_tab_mut().load(path)
+    }
+
+    pub fn move_cursor(&mut self, direction: CursorMove) {
+        self.current_tab_mut().move_cursor(direction);
+    }
+}
+
+impl Tab {
     pub fn insert_char(&mut self, c: char) {
         let Cursor { line, column } = self.cursor;
         let current_line = &mut self.lines[line];
