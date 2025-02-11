@@ -1,44 +1,27 @@
-use crate::buffer::Buffer;
-use syntect::{
-    easy::HighlightLines,
-    highlighting::ThemeSet,
-    parsing::SyntaxSet,
-};
-use tui::{
-    style::{Color, Style},
-    text::{Span, Spans},
-};
+use crate::ui::theme::{Theme, Color};
+use syntect::highlighting as synhighlight;
 
-use super::theme::Theme;
-
-pub fn highlight_content<'a>(buffer: &'a Buffer, theme: &'a Theme) -> Vec<Spans<'a>> {
-    let ss = SyntaxSet::load_defaults_newlines();
-    let ts = ThemeSet::load_defaults();
-    
-    let syntax = buffer.syntax_name()
-        .and_then(|name| ss.find_syntax_by_extension(name))
-        .unwrap_or_else(|| ss.find_syntax_plain_text());
-
-    let mut h = HighlightLines::new(syntax, &ts.themes["base16-ocean.dark"]);
-
-    buffer.lines().iter().map(|line| {
-        let line_str = line.as_str();
-        let regions = match h.highlight_line(line_str, &ss) {
-            Ok(regions) => regions,
-            Err(_) => vec![(syntect::highlighting::Style::default(), line_str)]
-        };
-        
-        let spans: Vec<Span> = regions.into_iter().map(|(style, text)| {
-            let color = match style.foreground {
-                fg if fg == syntect::highlighting::Color::WHITE => theme.foreground,
-                fg => convert_color(fg),
-            };
-            Span::styled(text.to_string(), Style::default().fg(color))
-        }).collect();
-        Spans::from(spans)
-    }).collect()
+pub fn convert_syntect_color(color: synhighlight::Color) -> Color {
+    Color {
+        r: color.r,
+        g: color.g,
+        b: color.b,
+    }
 }
 
-fn convert_color(color: syntect::highlighting::Color) -> Color {
-    Color::Rgb(color.r, color.g, color.b)
+pub fn highlight_content(content: &str, theme: &Theme) -> Vec<(Color, String)> {
+    let mut result = Vec::new();
+    
+    for line in content.lines() {
+        let trimmed = line.trim();
+        let color = match true {
+            _ if trimmed.starts_with("//") => theme.comment.clone(),
+            _ if trimmed.starts_with("\"") && trimmed.ends_with("\"") => theme.string.clone(),
+            _ if trimmed.starts_with("fn ") || trimmed.ends_with("()") => theme.function.clone(),
+            _ => theme.foreground.clone(),
+        };
+        result.push((color, line.to_string()));
+    }
+    
+    result
 }

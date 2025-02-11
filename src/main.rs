@@ -1,60 +1,49 @@
-use std::ptr;
-use ncurses::WINDOW;
+extern crate libc;
 
-mod editor;
-mod window;
-mod text;
-mod menu;
+mod buffer;
+mod error;
+mod ffi;
+mod ui;
 
-use editor::Editor;
-
-// Convert global state into struct fields
-pub struct EeState {
-    pub initialized: bool,
-    pub curscr: WINDOW,
-    pub stdscr: WINDOW,
-}
-
-impl Default for EeState {
-    fn default() -> Self {
-        Self {
-            initialized: false,
-            curscr: ptr::null_mut(),
-            stdscr: ptr::null_mut(),
-        }
-    }
-}
+use error::{Result, EditorError};
 
 fn main() {
-    // Initialize editor state
-    let mut state = EeState::default();
-    
-    // Set up signal handlers
-    for i in 1..24 {
-        unsafe {
-            libc::signal(i, libc::SIG_IGN);
+    match run() {
+        Ok(_) => std::process::exit(0),
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            if e.is_fatal() {
+                std::process::exit(1);
+            }
+            std::process::exit(0)
         }
     }
+}
 
-    // Check input/output are terminals
-    if !isatty(0) || !isatty(1) {
-        eprintln!("ee's standard input and output must be a terminal");
-        std::process::exit(1);
-    }
-
-    // Initialize editor with state
-    let mut editor = Editor::new(&mut state);
+fn run() -> Result<()> {
+    let mut ui = ui::UI::new()?;
     
-    // Parse command line args
-    editor.get_options();
-
-    // Set up terminal
-    editor.set_up_term();
-
-    // Main edit loop
-    while editor.edit {
-        editor.process_input();
+    loop {
+        if let Err(e) = ui.refresh() {
+            ui.display_error(&e);
+            if e.is_fatal() {
+                return Err(e);
+            }
+            continue;
+        }
+        
+        match ui.get_key()? {
+            Some(crossterm::event::KeyCode::Char('q')) => break,
+            Some(crossterm::event::KeyCode::Char('r')) => ui.resize(),
+            Some(key) => {
+                // Handle other keys
+                // You might want to pass this to an editor/buffer handler
+            }
+            None => {}
+        }
     }
+    
+    Ok(())
 }
 
 // Helper functions
