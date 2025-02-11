@@ -66,17 +66,17 @@ impl Editor {
                             ..
                         } => {
                             match c {
-                                'X' | 'x' => self.quit = true,
+                                'Q' | 'q' => self.quit = true,
                                 'O' | 'o' => self.ui.show_save_dialog(),
                                 'R' | 'r' => self.ui.show_load_dialog(),
                                 'T' | 't' => self.buffer.new_tab(),
+                                'N' | 'n' => self.buffer.next_tab(),
+                                'P' | 'p' => self.buffer.prev_tab(),
                                 'W' | 'w' => {
                                     if !self.buffer.close_tab() {
                                         self.quit = true;
                                     }
                                 }
-                                'N' | 'n' => self.buffer.next_tab(),
-                                'P' | 'p' => self.buffer.prev_tab(),
                                 _ => self.ui.set_input_mode(InputMode::Normal),
                             }
                         }
