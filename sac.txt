@@ -1,0 +1,11 @@
+Service URLs:
+SABnzbd: http://10.0.0.16:8080/
+Readarr: http://10.0.0.16:8787/
+Portainer: http://10.0.0.16:9000/
+jellyfin: http://10.0.0.16:8096/
+Bazarr: http://10.0.0.16:6767/
+Radarr: http://10.0.0.16:7878/
+Sonarr: http://10.0.0.16:8989/
+Prowlarr: http://10.0.0.16:9696/
+qBittorrent: http://10.0.0.16:8081/
+Lidarr: http://10.0.0.16:8686/

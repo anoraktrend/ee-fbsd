@@ -2,12 +2,10 @@ use std::path::PathBuf;
 use std::fs;
 use std::io::{self, Read};  // Remove unused Write import
 
-#[derive(Default)]
 pub struct Tab {
     pub lines: Vec<String>,  // Make public
     pub cursor: Cursor,      // Make public
     pub modified: bool,      // Make public
-    pub syntax_name: Option<String>,  // Make public
     pub filename: Option<PathBuf>,    // Make public
 }
 
@@ -82,14 +80,6 @@ impl Buffer {
         self.current_tab_mut().delete_char();
     }
 
-    pub fn syntax_name(&self) -> Option<&str> {
-        self.current_tab().syntax_name.as_deref()
-    }
-
-    pub fn set_syntax_name(&mut self, name: Option<String>) {
-        self.current_tab_mut().set_syntax_name(name);
-    }
-
     pub fn save(&mut self, filename: Option<PathBuf>) -> io::Result<()> {
         self.current_tab_mut().save(filename)
     }
@@ -105,33 +95,47 @@ impl Buffer {
 
 impl Tab {
     pub fn insert_char(&mut self, c: char) {
-        let Cursor { line, column } = self.cursor;
-        let current_line = &mut self.lines[line];
-        current_line.insert(column, c);
-        self.cursor.column += 1;
+        // Ensure there's at least one line
+        if self.lines.is_empty() {
+            self.lines.push(String::new());
+        }
+
+        // Handle newline specially
+        if c == '\n' {
+            let current_line = &self.lines[self.cursor.line];
+            let remainder = if self.cursor.column < current_line.len() {
+                current_line[self.cursor.column..].to_string()
+            } else {
+                String::new()
+            };
+            self.lines[self.cursor.line].truncate(self.cursor.column);
+            self.lines.insert(self.cursor.line + 1, remainder);
+            self.cursor.line += 1;
+            self.cursor.column = 0;
+        } else {
+            let current_line = &mut self.lines[self.cursor.line];
+            if self.cursor.column > current_line.len() {
+                current_line.push_str(&" ".repeat(self.cursor.column - current_line.len()));
+            }
+            current_line.insert(self.cursor.column, c);
+            self.cursor.column += 1;
+        }
         self.modified = true;
     }
 
     pub fn delete_char(&mut self) {
-        let Cursor { line, column } = self.cursor;
-        if column > 0 {
-            let current_line = &mut self.lines[line];
-            current_line.remove(column - 1);
-            self.cursor.column -= 1;
-            self.modified = true;
+        if self.lines.is_empty() {
+            return;
         }
-    }
 
-    pub fn lines(&self) -> &Vec<String> {
-        &self.lines
-    }
-
-    pub fn syntax_name(&self) -> Option<&str> {
-        self.syntax_name.as_deref()
-    }
-
-    pub fn set_syntax_name(&mut self, name: Option<String>) {
-        self.syntax_name = name;
+        if self.cursor.column > 0 {
+            let current_line = &mut self.lines[self.cursor.line];
+            if self.cursor.column <= current_line.len() {
+                current_line.remove(self.cursor.column - 1);
+                self.cursor.column -= 1;
+                self.modified = true;
+            }
+        }
     }
 
     pub fn save(&mut self, filename: Option<PathBuf>) -> io::Result<()> {
@@ -164,10 +168,6 @@ impl Tab {
         self.cursor.line = 0;
         self.cursor.column = 0;
         Ok(())
-    }
-
-    pub fn get_filename(&self) -> Option<&PathBuf> {
-        self.filename.as_ref()
     }
 
     pub fn move_cursor(&mut self, direction: CursorMove) {
@@ -215,13 +215,16 @@ impl Tab {
         let line_len = self.lines[self.cursor.line].len();
         self.cursor.column = self.cursor.column.min(line_len);
     }
+}
 
-    pub fn get_cursor(&self) -> &Cursor {
-        &self.cursor
-    }
-
-    pub fn is_modified(&self) -> bool {
-        self.modified
+impl Default for Tab {
+    fn default() -> Self {
+        Self {
+            lines: vec![String::new()],  // Initialize with one empty line
+            cursor: Cursor::default(),
+            modified: false,
+            filename: None,
+        }
     }
 }
 

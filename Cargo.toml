@@ -9,15 +9,15 @@ description = "Easy Editor (ee) - A simple text editor"
 # Terminal UI
 tui = "0.19"
 crossterm = "0.27"
-ncurses = "5.101"
-
-# Syntax highlighting
-syntect = "5.0"
 
 # Error handling and utilities
 thiserror = "1.0"
 log = "0.4"
 clap = { version = "4.0", features = ["derive"] }
+
+# Remove unused dependencies until implemented
+# syntect = "5.0"
+# ncurses = "5.101"
 
 [lib]
 name = "ee_fbsd"

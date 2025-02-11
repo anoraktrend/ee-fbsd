@@ -31,6 +31,8 @@ impl Editor {
     }
 
     fn handle_input(&mut self) -> Result<()> {
+        self.ui.clear_error(); // Clear any previous error
+        
         if let Some(event) = self.ui.get_key()? {
             match self.ui.get_input_mode() {
                 InputMode::Normal => {
@@ -115,19 +117,16 @@ impl Editor {
                 InputMode::Dialog => {
                     match self.ui.handle_dialog(event.code) {
                         DialogResult::Save(path) => {
-                            if let Err(e) = self.buffer.save(Some(path)) {
-                                // TODO: Show error message
-                                eprintln!("Failed to save: {}", e);
+                            if let Err(e) = self.buffer.save(Some(path.clone())) {
+                                self.ui.set_error(format!("Failed to save {}: {}", path.display(), e));
                             }
                         }
                         DialogResult::Load(path) => {
-                            if let Err(e) = self.buffer.load(path) {
-                                // TODO: Show error message
-                                eprintln!("Failed to load: {}", e);
+                            if let Err(e) = self.buffer.load(path.clone()) {
+                                self.ui.set_error(format!("Failed to load {}: {}", path.display(), e));
                             }
                         }
-                        DialogResult::Cancel => {}
-                        DialogResult::None => {}
+                        DialogResult::Cancel | DialogResult::None => {}
                     }
                 }
             }
@@ -139,7 +138,7 @@ impl Editor {
     fn handle_save(&mut self) -> Result<()> {
         if self.buffer.get_filename().is_some() {
             if let Err(e) = self.buffer.save(None) {
-                eprintln!("Failed to save: {}", e);
+                self.ui.set_error(format!("Failed to save: {}", e));
             }
         } else {
             self.ui.show_save_dialog();

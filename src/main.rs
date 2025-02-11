@@ -2,7 +2,6 @@ mod editor;
 mod ui;
 mod buffer;
 mod config;
-mod ffi;
 mod error;
 
 use std::process;
