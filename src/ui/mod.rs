@@ -9,13 +9,14 @@ use tui::{
     text::{Spans, Span, Text},
     style::{Style, Modifier, Color},
 };
-use crossterm::event::{self, Event, KeyCode, KeyEvent};
+use crossterm::event::{self, Event, KeyCode, KeyEvent, MouseEvent};
 use crossterm::{
     terminal::{Clear as TermClear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, enable_raw_mode, disable_raw_mode},
     ExecutableCommand,
 };
 use copypasta::{ClipboardContext, ClipboardProvider};
 use crate::syntax::SyntaxHighlighter;
+use crate::settings::Settings;
 
 pub type Result<T> = std::result::Result<T, io::Error>;
 
@@ -35,12 +36,15 @@ pub enum MenuOption {
     Find,
     Replace,
     Help,
+    Settings,  // Add settings option
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub enum InputMode {
     Normal,
     Menu,
     Dialog,
+    Settings,  // Add settings mode
 }
 
 pub struct UI {
@@ -48,12 +52,13 @@ pub struct UI {
     menu_active: bool,
     dialog_input: String,
     dialog_type: Option<DialogType>,
-    menu_selection: usize,
+    pub menu_selection: usize,
     input_mode: InputMode,
     error_message: Option<String>,
     clipboard: ClipboardContext,
     show_hints: bool,  // Add this field
     syntax_highlighter: SyntaxHighlighter,
+    settings: Settings,
 }
 
 enum DialogType {
@@ -79,6 +84,12 @@ impl UI {
         let backend = CrosstermBackend::new(stdout);
         let terminal = Terminal::new(backend)?;
         
+        // Enable mouse support if configured
+        if let Ok(()) = crossterm::execute!(
+            std::io::stdout(),
+            crossterm::event::EnableMouseCapture
+        ) {}
+
         Ok(Self { 
             terminal,
             menu_active: false,
@@ -90,6 +101,7 @@ impl UI {
             show_hints: true,  // Initialize hints as visible
             clipboard: ClipboardContext::new().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?,
             syntax_highlighter: SyntaxHighlighter::new(),
+            settings: Settings::new(),
         })
     }
 
@@ -181,13 +193,30 @@ impl UI {
                     ].as_ref())
                     .split(chunks[main_idx]);
 
+                // Update menu items to include settings
+                let menu_items = if self.input_mode == InputMode::Settings {
+                    vec![
+                        format!("Mouse support [{}]", if self.settings.is_mouse_enabled() { "x" } else { " " }),
+                        format!("DOS mode [{}]", if self.settings.is_dos_mode() { "x" } else { " " }),
+                        format!("Auto indent [{}]", if self.settings.is_auto_indent() { "x" } else { " " }),
+                        "Back to menu".to_string(),
+                    ]
+                } else {
+                    vec![
+                        "leave editor".into(),
+                        "save file".into(),
+                        "save as".into(),
+                        "read file".into(),
+                        "goto line".into(),
+                        "find string".into(),
+                        "replace".into(),
+                        "settings".into(),
+                        "help".into(),
+                    ]
+                };
+
                 // Draw menu
-                let menu_items = vec![
-                    "leave editor", "save file", "save as", "read file",
-                    "goto line", "find string", "replace", "help"
-                ];
-                
-                let menu_text: Vec<Spans> = menu_items.iter().enumerate().map(|(idx, &text)| {
+                let menu_text: Vec<Spans> = menu_items.iter().enumerate().map(|(idx, text)| {
                     let style = if idx == menu_selection {
                         Style::default().add_modifier(Modifier::REVERSED)
                     } else {
@@ -303,6 +332,10 @@ impl UI {
                     self.terminal.backend_mut().execute(TermClear(ClearType::All))?;
                     Ok(None)
                 }
+                Event::Mouse(mouse_event) => {
+                    self.handle_mouse(mouse_event);
+                    Ok(None)
+                }
                 _ => Ok(None)
             }
         } else {
@@ -374,21 +407,22 @@ impl UI {
             4 => Some(MenuOption::Goto),
             5 => Some(MenuOption::Find),
             6 => Some(MenuOption::Replace),
-            7 => Some(MenuOption::Help),
+            7 => Some(MenuOption::Settings),
+            8 => Some(MenuOption::Help),
             _ => None,
         }
     }
 
     pub fn menu_next(&mut self) {
-        self.menu_selection = (self.menu_selection + 1) % 8;
+        self.menu_selection = (self.menu_selection + 1) % 9;
     }
 
     pub fn menu_prev(&mut self) {
-        self.menu_selection = (self.menu_selection + 7) % 8;
+        self.menu_selection = (self.menu_selection + 8) % 9;
     }
 
     pub fn menu_goto(&mut self, index: usize) {
-        if index < 8 {
+        if index < 9 {
             self.menu_selection = index;
         }
     }
@@ -436,10 +470,41 @@ impl UI {
     pub fn toggle_hints(&mut self) {
         self.show_hints = !self.show_hints;
     }
+
+    pub fn handle_mouse(&mut self, mouse_event: MouseEvent) -> Option<(usize, usize)> {
+        if !self.settings.is_mouse_enabled() {
+            return None;
+        }
+
+        // Convert mouse position to buffer coordinates
+        // TODO: Implement proper coordinate translation
+        Some((mouse_event.row as usize, mouse_event.column as usize))
+    }
+
+    pub fn toggle_setting(&mut self, index: usize) {
+        match index {
+            0 => { self.settings.toggle_mouse(); }
+            1 => { self.settings.toggle_dos_mode(); }
+            2 => { self.settings.toggle_auto_indent(); }
+            3 => { self.input_mode = InputMode::Menu; }
+            _ => {}
+        }
+    }
+
+    pub fn show_settings(&mut self) {
+        self.menu_active = true;
+        self.input_mode = InputMode::Settings;
+        self.menu_selection = 0;
+    }
 }
 
 impl Drop for UI {
     fn drop(&mut self) {
+        // Disable mouse capture on exit
+        let _ = crossterm::execute!(
+            std::io::stdout(),
+            crossterm::event::DisableMouseCapture
+        );
         let mut stdout = std::io::stdout();
         let _ = stdout.execute(LeaveAlternateScreen);
         let _ = disable_raw_mode();

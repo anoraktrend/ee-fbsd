@@ -1,7 +1,6 @@
-use syntect::highlighting::{ThemeSet, Theme};
-use syntect::parsing::{SyntaxSet, SyntaxReference};
-use syntect::util::LinesWithEndings;
-use tui::style::{Color, Style};
+use syntect::highlighting::ThemeSet;
+use syntect::parsing::SyntaxSet;
+use tui::style::Color;
 use std::path::Path;
 
 pub struct SyntaxHighlighter {
@@ -22,7 +21,7 @@ impl SyntaxHighlighter {
         }
     }
 
-    pub fn highlight_line(&self, line: &str, extension: Option<&str>) -> Vec<(Color, &str)> {
+    pub fn highlight_line<'a>(&self, line: &'a str, extension: Option<&str>) -> Vec<(Color, &'a str)> {
         let syntax = match extension {
             Some(ext) => self.syntax_set.find_syntax_by_extension(ext)
                 .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text()),

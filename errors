@@ -1,0 +1,264 @@
+   Compiling ee-fbsd v0.1.0 (/home/lucy/ee-fbsd)
+error[E0412]: cannot find type `CursorMove` in this scope
+  --> src/buffer/tab.rs:63:45
+   |
+63 |     pub fn move_cursor(&mut self, movement: CursorMove) {
+   |                                             ^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+  --> src/buffer/tab.rs:65:13
+   |
+65 |             CursorMove::Left => {
+   |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+  --> src/buffer/tab.rs:73:13
+   |
+73 |             CursorMove::Right => {
+   |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+  --> src/buffer/tab.rs:81:13
+   |
+81 |             CursorMove::Up => {
+   |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+  --> src/buffer/tab.rs:87:13
+   |
+87 |             CursorMove::Down => {
+   |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+  --> src/buffer/tab.rs:93:13
+   |
+93 |             CursorMove::PageUp(n) => {
+   |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+   |
+help: consider importing one of these enums
+   |
+1  + use crate::buffer::CursorMove;
+   |
+1  + use crate::editor::CursorMove;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `CursorMove`
+   --> src/buffer/tab.rs:101:13
+    |
+101 |             CursorMove::PageDown(n) => {
+    |             ^^^^^^^^^^ use of undeclared type `CursorMove`
+    |
+help: consider importing one of these enums
+    |
+1   + use crate::buffer::CursorMove;
+    |
+1   + use crate::editor::CursorMove;
+    |
+
+warning: unused import: `std::fs::File`
+  --> src/buffer/mod.rs:10:5
+   |
+10 | use std::fs::File;
+   |     ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `BufReader` and `Write`
+  --> src/buffer/mod.rs:11:21
+   |
+11 | use std::io::{self, BufReader, Write};
+   |                     ^^^^^^^^^  ^^^^^
+
+warning: unnecessary parentheses around `if` condition
+  --> src/syntax/mod.rs:35:16
+   |
+35 |             if (comment_pos > 0) {
+   |                ^               ^
+   |
+   = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+   |
+35 -             if (comment_pos > 0) {
+35 +             if comment_pos > 0 {
+   |
+
+error[E0599]: no method named `get_lines` found for reference `&editor::tab::Tab` in the current scope
+   --> src/editor/buffer.rs:157:14
+    |
+157 |         self.get_lines()
+    |              ^^^^^^^^^
+    |
+help: there is a method `lines` with a similar name
+    |
+157 |         self.lines()
+    |              ~~~~~
+
+error[E0599]: no method named `expect` found for struct `Regex` in the current scope
+  --> src/syntax/mod.rs:20:63
+   |
+20 |             numbers_regex: Regex::new(r"\b\d+\b".to_string()).expect("Invalid regex pattern"),
+   |                                                               ^^^^^^ method not found in `Regex`
+
+error[E0616]: field `tabs` of struct `buffer::Buffer` is private
+   --> src/ui/mod.rs:126:48
+    |
+126 |             let tabs_spans: Vec<Span> = buffer.tabs.iter().enumerate().flat_map(|(idx, tab)| {
+    |                                                ^^^^ private field
+
+error[E0616]: field `current_tab` of struct `buffer::Buffer` is private
+   --> src/ui/mod.rs:134:46
+    |
+134 |                 let style = if idx == buffer.current_tab {
+    |                                              ^^^^^^^^^^^ private field
+    |
+help: a method `current_tab` also exists, call it with parentheses
+    |
+134 |                 let style = if idx == buffer.current_tab() {
+    |                                                         ++
+
+warning: unused import: `Read`
+ --> src/editor/tab.rs:3:21
+  |
+3 | use std::io::{self, Read, Write};
+  |                     ^^^^
+
+warning: unused variable: `text`
+   --> src/buffer/tab.rs:155:17
+    |
+155 |             let text = self.get_selected_text().unwrap();
+    |                 ^^^^ help: if this is intentional, prefix it with an underscore: `_text`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+error[E0502]: cannot borrow `*tab` as immutable because it is also borrowed as mutable
+   --> src/buffer/mod.rs:117:27
+    |
+116 |         if let Some(selection) = tab.get_selection_mut() {
+    |                                  --- mutable borrow occurs here
+117 |             let cursor = *tab.get_cursor();
+    |                           ^^^ immutable borrow occurs here
+118 |             selection.end = cursor;
+    |             ---------------------- mutable borrow later used here
+
+error[E0500]: closure requires unique access to `*tab` but it is already borrowed
+   --> src/buffer/mod.rs:143:40
+    |
+143 |         tab.get_selection().take().map(|selection| {
+    |         ---                        --- ^^^^^^^^^^^ closure construction occurs here
+    |         |                          |
+    |         borrow occurs here         first borrow later used by call
+...
+147 |                 let line = tab.get_lines_mut().get_mut(start.line).unwrap();
+    |                            --- second borrow occurs due to use of `*tab` in closure
+
+warning: function cannot return without recursing
+   --> src/editor/buffer.rs:160:5
+    |
+160 |     fn get_cursor(&self) -> &Cursor {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot return without recursing
+161 |         self.get_cursor()
+    |         ----------------- recursive call site
+    |
+    = help: a `loop` may express intention better if this is on purpose
+    = note: `#[warn(unconditional_recursion)]` on by default
+
+warning: function cannot return without recursing
+   --> src/editor/buffer.rs:164:5
+    |
+164 |     fn is_modified(&self) -> bool {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot return without recursing
+165 |         self.is_modified()
+    |         ------------------ recursive call site
+    |
+    = help: a `loop` may express intention better if this is on purpose
+
+warning: function cannot return without recursing
+   --> src/editor/buffer.rs:168:5
+    |
+168 |     fn get_filename(&self) -> Option<&PathBuf> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot return without recursing
+169 |         self.get_filename()
+    |         ------------------- recursive call site
+    |
+    = help: a `loop` may express intention better if this is on purpose
+
+error[E0716]: temporary value dropped while borrowed
+  --> src/syntax/mod.rs:29:52
+   |
+29 |         let theme = self.theme.as_ref().unwrap_or(&Theme::default());
+   |                                                    ^^^^^^^^^^^^^^^^ - temporary value is freed at the end of this statement
+   |                                                    |
+   |                                                    creates a temporary value which is freed while still in use
+...
+42 |         self.highlight_code_segment(line, extension, theme, &mut ranges);
+   |                                                      ----- borrow later used here
+   |
+help: consider using a `let` binding to create a longer lived value
+   |
+29 ~         let binding = Theme::default();
+30 ~         let theme = self.theme.as_ref().unwrap_or(&binding);
+   |
+
+warning: unused variable: `text`
+  --> src/syntax/mod.rs:53:9
+   |
+53 |         text: &'a str,
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_text`
+
+warning: unused variable: `extension`
+  --> src/syntax/mod.rs:54:9
+   |
+54 |         extension: Option<&str>,
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_extension`
+
+warning: unused variable: `theme`
+  --> src/syntax/mod.rs:55:9
+   |
+55 |         theme: &Theme,
+   |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_theme`
+
+warning: unused variable: `ranges`
+  --> src/syntax/mod.rs:56:9
+   |
+56 |         ranges: &mut Vec<(Color, &'a str)>
+   |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_ranges`
+
+Some errors have detailed explanations: E0412, E0433, E0500, E0502, E0599, E0616, E0716.
+For more information about an error, try `rustc --explain E0412`.
+warning: `ee-fbsd` (lib) generated 12 warnings
+error: could not compile `ee-fbsd` (lib) due to 14 previous errors; 12 warnings emitted

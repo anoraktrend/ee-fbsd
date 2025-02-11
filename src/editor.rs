@@ -1,7 +1,7 @@
 use crate::buffer::Buffer;
 use crate::ui::UI;
 use crate::error::{Result, EditorError};
-use crossterm::event::{KeyCode, KeyModifiers};
+use crossterm::event::{KeyCode, KeyModifiers, MouseEventKind, Event};
 use crate::ui::DialogResult;
 use crate::buffer::CursorMove;
 use crate::ui::MenuOption;
@@ -34,144 +34,169 @@ impl Editor {
     fn handle_input(&mut self) -> Result<()> {
         self.ui.clear_error(); // Clear any previous error
         
-        if let Some(key_event) = self.ui.get_key()? {
-            match self.ui.get_input_mode() {
-                InputMode::Normal => {
-                    match (key_event.code, key_event.modifiers) {
-                        // Exit to menu
-                        (KeyCode::Esc, _) => self.ui.show_menu(),
-                        
-                        // Control key shortcuts
-                        (KeyCode::Char(c), m) if m.contains(KeyModifiers::CONTROL) => {
-                            match c {
-                                'q' | 'Q' => self.quit = true,
-                                's' | 'S' => self.handle_save()?,  // Changed from O to S
-                                'o' | 'O' => self.ui.show_load_dialog(), // Changed from R to O
-                                't' | 'T' => self.buffer.new_tab(),
-                                'n' | 'N' => self.buffer.next_tab(),
-                                'p' | 'P' => self.buffer.prev_tab(),
-                                'w' | 'W' => {
-                                    if !self.buffer.close_tab() {
-                                        self.quit = true;
+        if let Some(event) = self.ui.get_key()? {
+            if let Event::Key(key) = event {
+                match self.ui.get_input_mode() {
+                    InputMode::Normal => {
+                        match (key.code, key.modifiers) {
+                            // Exit to menu
+                            (KeyCode::Esc, _) => self.ui.show_menu(),
+                            
+                            // Control key shortcuts
+                            (KeyCode::Char(c), m) if m.contains(KeyModifiers::CONTROL) => {
+                                match c {
+                                    'q' | 'Q' => self.quit = true,
+                                    's' | 'S' => self.handle_save()?,  // Changed from O to S
+                                    'o' | 'O' => self.ui.show_load_dialog(), // Changed from R to O
+                                    't' | 'T' => self.buffer.new_tab(),
+                                    'n' | 'N' => self.buffer.next_tab(),
+                                    'p' | 'P' => self.buffer.prev_tab(),
+                                    'w' | 'W' => {
+                                        if !self.buffer.close_tab() {
+                                            self.quit = true;
+                                        }
+                                    }
+                                    'h' | 'H' => self.ui.toggle_hints(),
+                                    _ => (),
+                                }
+                            },
+
+                            // Regular typing
+                            (KeyCode::Char(c), m) if m.is_empty() => self.buffer.insert_char(c),
+                            
+                            // Selection mode with shift
+                            (KeyCode::Left | KeyCode::Right | KeyCode::Up | KeyCode::Down, m) 
+                            if m.contains(KeyModifiers::SHIFT) => {
+                                self.buffer.start_selection();
+                                match key.code {
+                                    KeyCode::Left => self.buffer.move_cursor(CursorMove::Left),
+                                    KeyCode::Right => self.buffer.move_cursor(CursorMove::Right),
+                                    KeyCode::Up => self.buffer.move_cursor(CursorMove::Up),
+                                    KeyCode::Down => self.buffer.move_cursor(CursorMove::Down),
+                                    _ => unreachable!(),
+                                }
+                                self.buffer.update_selection();
+                            },
+
+                            // Copy/Cut/Paste
+                            (KeyCode::Char('c'), m) if m.contains(KeyModifiers::CONTROL) => {
+                                if let Some(text) = self.buffer.get_selected_text() {
+                                    self.ui.copy_to_clipboard(&text)?;
+                                    self.buffer.clear_selection();
+                                }
+                            },
+                            (KeyCode::Char('x'), m) if m.contains(KeyModifiers::CONTROL) => {
+                                if let Some(text) = self.buffer.delete_selection() {
+                                    self.ui.copy_to_clipboard(&text)?;
+                                }
+                            },
+                            (KeyCode::Char('v'), m) if m.contains(KeyModifiers::CONTROL) => {
+                                if let Some(text) = self.ui.paste_from_clipboard()? {
+                                    self.buffer.clear_selection();
+                                    for c in text.chars() {
+                                        self.buffer.insert_char(c);
                                     }
                                 }
-                                'h' | 'H' => self.ui.toggle_hints(),
-                                _ => (),
-                            }
-                        },
+                            },
 
-                        // Regular typing
-                        (KeyCode::Char(c), m) if m.is_empty() => self.buffer.insert_char(c),
-                        
-                        // Selection mode with shift
-                        (KeyCode::Left | KeyCode::Right | KeyCode::Up | KeyCode::Down, m) 
-                        if m.contains(KeyModifiers::SHIFT) => {
-                            self.buffer.start_selection();
-                            match key_event.code {
-                                KeyCode::Left => self.buffer.move_cursor(CursorMove::Left),
-                                KeyCode::Right => self.buffer.move_cursor(CursorMove::Right),
-                                KeyCode::Up => self.buffer.move_cursor(CursorMove::Up),
-                                KeyCode::Down => self.buffer.move_cursor(CursorMove::Down),
-                                _ => unreachable!(),
+                            // Regular cursor movement and basic keys
+                            (KeyCode::Left, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Left),
+                            (KeyCode::Right, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Right),
+                            (KeyCode::Up, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Up),
+                            (KeyCode::Down, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Down),
+                            (KeyCode::Enter, _) => self.buffer.insert_char('\n'),
+                            (KeyCode::Tab, _) => self.buffer.insert_char('\t'),
+                            (KeyCode::Backspace, _) => self.buffer.delete_char(),
+                            (KeyCode::PageUp, _) => {
+                                let page_size = self.ui.get_page_size();
+                                self.buffer.move_cursor(CursorMove::PageUp(page_size));
+                            },
+                            (KeyCode::PageDown, _) => {
+                                let page_size = self.ui.get_page_size();
+                                self.buffer.move_cursor(CursorMove::PageDown(page_size));
+                            },
+                            _ => (), // Ignore other keys
+                        }
+                    },
+                    InputMode::Menu => {
+                        match key.code {
+                            KeyCode::Esc => self.ui.hide_menu(),
+                            KeyCode::Up => self.ui.menu_prev(),
+                            KeyCode::Down => self.ui.menu_next(),
+                            KeyCode::Enter => {
+                                match self.ui.menu_select() {
+                                    Some(MenuOption::Exit) => self.quit = true,
+                                    Some(MenuOption::Save) => self.handle_save()?,
+                                    Some(MenuOption::SaveAs) => self.ui.show_save_dialog(),
+                                    Some(MenuOption::Read) => self.ui.show_load_dialog(),
+                                    Some(MenuOption::Goto) => { /* TODO */ },
+                                    Some(MenuOption::Find) => { /* TODO */ },
+                                    Some(MenuOption::Replace) => { /* TODO */ },
+                                    Some(MenuOption::Help) => { /* TODO */ },
+                                    None => (),
+                                }
+                                self.ui.hide_menu();  // Hide menu after selection
                             }
-                            self.buffer.update_selection();
-                        },
-
-                        // Copy/Cut/Paste
-                        (KeyCode::Char('c'), m) if m.contains(KeyModifiers::CONTROL) => {
-                            if let Some(text) = self.buffer.get_selected_text() {
-                                self.ui.copy_to_clipboard(&text)?;
-                                self.buffer.clear_selection();
-                            }
-                        },
-                        (KeyCode::Char('x'), m) if m.contains(KeyModifiers::CONTROL) => {
-                            if let Some(text) = self.buffer.delete_selection() {
-                                self.ui.copy_to_clipboard(&text)?;
-                            }
-                        },
-                        (KeyCode::Char('v'), m) if m.contains(KeyModifiers::CONTROL) => {
-                            if let Some(text) = self.ui.paste_from_clipboard()? {
-                                self.buffer.clear_selection();
-                                for c in text.chars() {
-                                    self.buffer.insert_char(c);
+                            KeyCode::Char(c) => {
+                                if let Some(digit) = c.to_digit(10) {
+                                    if digit > 0 && digit <= 8 {
+                                        self.ui.menu_goto(digit as usize - 1);
+                                        // Auto-execute the selected menu item
+                                        match self.ui.menu_select() {
+                                            Some(MenuOption::Exit) => self.quit = true,
+                                            Some(MenuOption::Save) => self.handle_save()?,
+                                            Some(MenuOption::SaveAs) => self.ui.show_save_dialog(),
+                                            Some(MenuOption::Read) => self.ui.show_load_dialog(),
+                                            Some(MenuOption::Goto) => { /* TODO */ },
+                                            Some(MenuOption::Find) => { /* TODO */ },
+                                            Some(MenuOption::Replace) => { /* TODO */ },
+                                            Some(MenuOption::Help) => { /* TODO */ },
+                                            None => (),
+                                        }
+                                        self.ui.hide_menu();
+                                    }
                                 }
                             }
-                        },
-
-                        // Regular cursor movement and basic keys
-                        (KeyCode::Left, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Left),
-                        (KeyCode::Right, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Right),
-                        (KeyCode::Up, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Up),
-                        (KeyCode::Down, m) if m.is_empty() => self.buffer.move_cursor(CursorMove::Down),
-                        (KeyCode::Enter, _) => self.buffer.insert_char('\n'),
-                        (KeyCode::Tab, _) => self.buffer.insert_char('\t'),
-                        (KeyCode::Backspace, _) => self.buffer.delete_char(),
-                        (KeyCode::PageUp, _) => {
-                            let page_size = self.ui.get_page_size();
-                            self.buffer.move_cursor(CursorMove::PageUp(page_size));
-                        },
-                        (KeyCode::PageDown, _) => {
-                            let page_size = self.ui.get_page_size();
-                            self.buffer.move_cursor(CursorMove::PageDown(page_size));
-                        },
-                        _ => (), // Ignore other keys
+                            _ => (), // Ignore other keys when menu is active
+                        }
                     }
-                },
-                InputMode::Menu => {
-                    match key_event.code {
-                        KeyCode::Esc => self.ui.hide_menu(),
-                        KeyCode::Up => self.ui.menu_prev(),
-                        KeyCode::Down => self.ui.menu_next(),
-                        KeyCode::Enter => {
-                            match self.ui.menu_select() {
-                                Some(MenuOption::Exit) => self.quit = true,
-                                Some(MenuOption::Save) => self.handle_save()?,
-                                Some(MenuOption::SaveAs) => self.ui.show_save_dialog(),
-                                Some(MenuOption::Read) => self.ui.show_load_dialog(),
-                                Some(MenuOption::Goto) => { /* TODO */ },
-                                Some(MenuOption::Find) => { /* TODO */ },
-                                Some(MenuOption::Replace) => { /* TODO */ },
-                                Some(MenuOption::Help) => { /* TODO */ },
-                                None => (),
-                            }
-                            self.ui.hide_menu();  // Hide menu after selection
-                        }
-                        KeyCode::Char(c) => {
-                            if let Some(digit) = c.to_digit(10) {
-                                if digit > 0 && digit <= 8 {
-                                    self.ui.menu_goto(digit as usize - 1);
-                                    // Auto-execute the selected menu item
-                                    match self.ui.menu_select() {
-                                        Some(MenuOption::Exit) => self.quit = true,
-                                        Some(MenuOption::Save) => self.handle_save()?,
-                                        Some(MenuOption::SaveAs) => self.ui.show_save_dialog(),
-                                        Some(MenuOption::Read) => self.ui.show_load_dialog(),
-                                        Some(MenuOption::Goto) => { /* TODO */ },
-                                        Some(MenuOption::Find) => { /* TODO */ },
-                                        Some(MenuOption::Replace) => { /* TODO */ },
-                                        Some(MenuOption::Help) => { /* TODO */ },
-                                        None => (),
-                                    }
-                                    self.ui.hide_menu();
+                    InputMode::Dialog => {
+                        match self.ui.handle_dialog(key.code) {
+                            DialogResult::Save(path) => {
+                                if let Err(e) = self.buffer.save(Some(path.clone())) {
+                                    self.ui.set_error(format!("Failed to save {}: {}", path.display(), e));
                                 }
                             }
+                            DialogResult::Load(path) => {
+                                if let Err(e) = self.buffer.load(path.clone()) {
+                                    self.ui.set_error(format!("Failed to load {}: {}", path.display(), e));
+                                }
+                            }
+                            DialogResult::Cancel | DialogResult::None => {}
                         }
-                        _ => (), // Ignore other keys when menu is active
+                    }
+                    InputMode::Settings => {
+                        match key.code {
+                            KeyCode::Esc => self.ui.hide_menu(),
+                            KeyCode::Up => self.ui.menu_prev(),
+                            KeyCode::Down => self.ui.menu_next(),
+                            KeyCode::Enter => {
+                                self.ui.toggle_setting(self.ui.menu_selection);
+                            }
+                            _ => (),
+                        }
                     }
                 }
-                InputMode::Dialog => {
-                    match self.ui.handle_dialog(key_event.code) {
-                        DialogResult::Save(path) => {
-                            if let Err(e) = self.buffer.save(Some(path.clone())) {
-                                self.ui.set_error(format!("Failed to save {}: {}", path.display(), e));
-                            }
+            } else if let Event::Mouse(mouse_event) = event {
+                if let Some((row, col)) = self.ui.handle_mouse(mouse_event) {
+                    match mouse_event.kind {
+                        MouseEventKind::Down(_) => {
+                            self.buffer.set_cursor_position(row, col);
                         }
-                        DialogResult::Load(path) => {
-                            if let Err(e) = self.buffer.load(path.clone()) {
-                                self.ui.set_error(format!("Failed to load {}: {}", path.display(), e));
-                            }
+                        MouseEventKind::Drag(_) => {
+                            self.buffer.update_selection_to(row, col);
                         }
-                        DialogResult::Cancel | DialogResult::None => {}
+                        _ => (),
                     }
                 }
             }

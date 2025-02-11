@@ -1,8 +1,6 @@
 use std::path::PathBuf;
 use std::fs;
-use std::io::{self, Read};  // Remove unused Write import
-use std::path::Path;
-use crate::syntax::SyntaxHighlighter;
+use std::io::{self, Read};
 
 #[derive(Clone, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Cursor {
@@ -128,6 +126,24 @@ impl Buffer {
         self.tabs[0].lines.len() == 1 && 
         self.tabs[0].lines[0].is_empty() &&
         !self.tabs[0].modified
+    }
+
+    pub fn set_cursor_position(&mut self, row: usize, col: usize) {
+        let tab = self.current_tab_mut();
+        tab.cursor.line = row.min(tab.lines.len().saturating_sub(1));
+        tab.cursor.column = col;
+        tab.clamp_cursor_column();
+    }
+
+    pub fn update_selection_to(&mut self, row: usize, col: usize) {
+        let tab = self.current_tab_mut();
+        if tab.selection.is_none() {
+            tab.start_selection();
+        }
+        tab.cursor.line = row.min(tab.lines.len().saturating_sub(1));
+        tab.cursor.column = col;
+        tab.clamp_cursor_column();
+        tab.update_selection();
     }
 }
 
