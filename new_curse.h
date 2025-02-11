@@ -40,6 +40,8 @@
  */
 
 #include <stdio.h>
+#include "config.h"
+#include "error.h"
 
 #ifdef SYS5
 #include <termio.h>

@@ -3,3 +3,4 @@ build/
 *.o
 ee
 make.local
+Cargo.lock

@@ -92,20 +92,21 @@ char *version = "@(#) ee, version "  EE_VERSION  " $Revision: 1.104 $";
 #endif
 
 #ifdef HAS_UNISTD
-#include <unistd.h>
+#include <unistd.h> 
+#else
+#define STDIN_FILENO 0
+#define STDOUT_FILENO 1
 #endif
 
-#ifndef NO_CATGETS
-#include <nl_types.h>
-
-nl_catd catalog;
-#else
+/* Use simple string lookup without message catalogs for better portability */
+#define NO_CATGETS
 #define catgetlocal(a, b) (b)
-#endif /* NO_CATGETS */
 
 #ifndef SIGCHLD
 #define SIGCHLD SIGCLD
 #endif
+
+#include "curse_adapter.h"
 
 enum {
 TAB = 9
@@ -2431,7 +2432,6 @@ quit(int noverify)
 {
 	char *ans;
 
-	touchwin(text_win);
 	wrefresh(text_win);
 	if ((text_changes) && (!noverify))
 	{
