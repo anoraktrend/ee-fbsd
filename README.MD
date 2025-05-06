@@ -8,4 +8,4 @@ or
 
 ``git clone https://github.com/anoraktrend/ee-fbsd && cd ee-fbsd && cargo install --path .``
 
-Preferably, though, 
+Preferably, though, you should build the C version with make or meson & ninja. The C version is well tested and known to work.
