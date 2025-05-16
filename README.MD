@@ -1,4 +1,4 @@
-Hi! this is the freebsd version of EE you can build this with meson and Ninja. Simply run ``meson setup build``, ``ninja -c build``, ``meson install build``. This should work on most linux distros, macos, and freebsd. The meson version is untested on other bsds, other unixlikes or unixes, and windows 11 but it should work on all of those. 
+Hi! This is a version of EE extracted from freebsd. You can build this with meson and Ninja. Simply run ``meson setup build``, ``ninja -c build``, ``meson install build``. This should work on most linux distros, macos, and freebsd. The meson version is untested on other bsds, other unixlikes or unixes, and windows 11 but it should work on all of those. 
 Along with this version with an updated build system, there is an additional rust conversion.
 To install the rust version, simply run:
 
